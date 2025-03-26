@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "chrome-types": "^0.1.345",
+    "element-plus": "^2.9.7",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"
   },
@@ -23,6 +24,8 @@
     "@vue/tsconfig": "^0.7.0",
     "npm-run-all2": "^7.0.2",
     "typescript": "~5.8.0",
+    "unplugin-auto-import": "^19.1.2",
+    "unplugin-vue-components": "^28.4.1",
     "vite": "^6.2.1",
     "vite-plugin-vue-devtools": "^7.7.2",
     "vue-tsc": "^2.2.8"

@@ -5,9 +5,12 @@
   "manifest_version": 3,
   "action": {
     "default_popup": "popup.html",
-    "default_icon": "new-tab.png"
+    "default_icon": "favicon.png"
   },
   "chrome_url_overrides": {
-    "newtab": "newtab.html"
-  }
+    "newtab": "index.html"
+  },
+  "permissions": [
+    "bookmarks"
+  ]
 }
