@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
-import {ref} from "vue";
+import {onMounted, ref, useTemplateRef} from "vue";
 import BookmarksTree from "@/components/BookmarksTree.vue";
+import SearchBar from "@/components/SearchBar.vue";
 
 
 const bookmarks = ref<chrome.bookmarks.BookmarkTreeNode[]>();
@@ -66,14 +66,21 @@ if (!bookmarks.value) {
 }
 
 const openPage = (url: string) => window.location.assign(url)
+const activeMenu = ref('')
+const handleSelect = () => {
+  console.log('handleSelect', activeMenu.value)
+}
 
+onMounted(() => {
+
+})
 </script>
 
 <template>
   <div class="background">
     <el-container class="container">
       <el-header>
-        <el-menu mode="horizontal">
+        <el-menu mode="horizontal" show-timeout="0" unique-opened @select="handleSelect" :default-active="activeMenu">
           <template v-for="node in bookmarks" :key="node.id">
             <el-sub-menu v-if="node.children" :index="node.id">
               <template #title>{{ node.title }}</template>
@@ -88,17 +95,15 @@ const openPage = (url: string) => window.location.assign(url)
       </el-header>
 
       <el-main>
-
+        <div class="search-container">
+          <search-bar/>
+        </div>
       </el-main>
     </el-container>
   </div>
 </template>
 
 <style scoped>
-.el-menu--horizontal {
-  --el-menu-bg-color: rgba(0, 0, 0, 0);
-}
-
 .background {
   background-image: url("https://bing.ee123.net/img/");
   width: 100%;
@@ -112,5 +117,12 @@ const openPage = (url: string) => window.location.assign(url)
   height: 100vh;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.3);
+}
+
+.search-container {
+  width: 100%;
+  display: grid;
+  place-items: center;
+  height: 100%;
 }
 </style>
