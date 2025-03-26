@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import TheWelcome from '../components/TheWelcome.vue'
 import {ref} from "vue";
+import BookmarksTree from "@/components/BookmarksTree.vue";
 
 
 const bookmarks = ref<chrome.bookmarks.BookmarkTreeNode[]>();
@@ -28,19 +29,88 @@ if (chrome.bookmarks) {
   console.log('chrome.bookmarks is not available')
 }
 
+if (!bookmarks.value) {
+  bookmarks.value = [
+    {index: 0, title: '书签1', id: '1', syncing: false},
+    {index: 1, title: '书签2', id: '2', syncing: false},
+    {
+      index: 2, title: '书签3', id: '3', syncing: false,
+      children: [
+        {index: 0, title: '书签3-1', id: '3-1', syncing: false},
+        {index: 1, title: '书签3-2', id: '3-2', syncing: false},
+        {index: 2, title: '书签3-3', id: '3-3', syncing: false},
+      ]
+    },
+    {index: 3, title: '书签4', id: '4', syncing: false},
+    {
+      index: 4, title: '书签5', id: '5', syncing: false,
+      children: [
+        {index: 0, title: '书签5-1', id: '5-1', syncing: false},
+        {index: 1, title: '书签5-2', id: '5-2', syncing: false},
+        {
+          index: 2, title: '书签5-3', id: '5-3', syncing: false,
+          children: [
+            {index: 0, title: '书签5-3-1', id: '5-3-1', syncing: false},
+            {index: 1, title: '书签5-3-2', id: '5-3-2', syncing: false},
+            {index: 2, title: '书签5-3-3', id: '5-3-3', syncing: false},
+          ]
+        }
+      ]
+    },
+    {index: 5, title: '书签6', id: '6', syncing: false},
+    {index: 6, title: '书签7', id: '7', syncing: false},
+    {index: 7, title: '书签8', id: '8', syncing: false},
+    {index: 8, title: '书签9', id: '9', syncing: false},
+    {index: 9, title: '书签10', id: '10', syncing: false},
+  ]
+}
+
+const openPage = (url: string) => window.location.assign(url)
 
 </script>
 
 <template>
-  <main>
-    <TheWelcome/>
-    <section>
-      <h2>Bookmarks</h2>
-      <ul>
-        <li v-for="bookmark in bookmarks" :key="bookmark.id">
-          <a :href="bookmark.url" target="_blank">{{ bookmark.title }}</a>
-        </li>
-      </ul>
-    </section>
-  </main>
+  <div class="background">
+    <el-container class="container">
+      <el-header>
+        <el-menu mode="horizontal">
+          <template v-for="node in bookmarks" :key="node.id">
+            <el-sub-menu v-if="node.children" :index="node.id">
+              <template #title>{{ node.title }}</template>
+              <bookmarks-tree :nodes="node.children"/>
+            </el-sub-menu>
+            <el-menu-item v-else :index="node.id" @click="node.url && openPage(node.url)">{{
+                node.title
+              }}
+            </el-menu-item>
+          </template>
+        </el-menu>
+      </el-header>
+
+      <el-main>
+
+      </el-main>
+    </el-container>
+  </div>
 </template>
+
+<style scoped>
+.el-menu--horizontal {
+  --el-menu-bg-color: rgba(0, 0, 0, 0);
+}
+
+.background {
+  background-image: url("https://bing.ee123.net/img/");
+  width: 100%;
+  height: 100vh;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+.container {
+  height: 100vh;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+</style>
