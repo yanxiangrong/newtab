@@ -444,20 +444,31 @@ onMounted(() => {
   height: 100%;
 }
 
-.bookmark-link {
-  justify-content: start;
-  align-items: center;
-  background-color: var(--el-menu-bg-color);
-  color: var(--el-menu-text-color);
+.el-menu--horizontal .bookmark-link {
   display: flex;
+  justify-content: start;
   font-size: var(--el-menu-item-font-size);
-  height: 100%;
+  height: var(--el-menu-horizontal-sub-item-height);
+  line-height: var(--el-menu-horizontal-sub-item-height);
   padding: 0 var(--el-menu-base-level-padding);
   white-space: nowrap;
 }
 
-.el-link {
+.el-menu--horizontal>.bookmark-link {
+  align-items: center;
+  display: inline-flex;
+  font-size: var(--el-menu-item-font-size);
+  height: 100%;
+  line-height: 100%;
+  padding: 0 var(--el-menu-base-level-padding);
+}
+
+.el-menu--horizontal .el-link {
   --el-link-text-color: var(--el-menu-text-color);
+}
+
+.el-menu--horizontal .el-icon {
+  font-size: 18px;
 }
 
 .el-icon img {

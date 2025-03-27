@@ -30,7 +30,7 @@ const faviconURL = (u: string) => {
       </template>
       <bookmarks-tree :nodes="node.children"/>
     </el-sub-menu>
-    <el-link v-else  class="bookmark-link" :key="'else' + node.id" :href="node.url">
+    <el-link v-else class="bookmark-link" :key="'else' + node.id" :href="node.url">
       <el-icon v-if="node.url" style="margin-right: 8px">
         <img loading="lazy" :src="faviconURL(node.url)" alt=""/>
       </el-icon>
@@ -43,8 +43,6 @@ const faviconURL = (u: string) => {
 .bookmark-link {
   justify-content: start;
   align-items: center;
-  background-color: var(--el-menu-bg-color);
-  color: var(--el-menu-text-color);
   display: flex;
   font-size: var(--el-menu-item-font-size);
   height: var(--el-menu-horizontal-sub-item-height);
@@ -62,4 +60,5 @@ const faviconURL = (u: string) => {
   height: 100%;
   width: 100%;
 }
+
 </style>
