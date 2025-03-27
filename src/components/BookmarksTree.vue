@@ -30,14 +30,12 @@ const faviconURL = (u: string) => {
       </template>
       <bookmarks-tree :nodes="node.children"/>
     </el-sub-menu>
-    <div v-else class="bookmark-link">
-      <el-link style="width: 100%; justify-content: start" :href="node.url">
-        <el-icon v-if="node.url" style="margin-right: 8px">
-          <img loading="lazy" :src="faviconURL(node.url)" alt=""/>
-        </el-icon>
-        {{ node.title }}
-      </el-link>
-    </div>
+    <el-link v-else  class="bookmark-link" :key="'else' + node.id" :href="node.url">
+      <el-icon v-if="node.url" style="margin-right: 8px">
+        <img loading="lazy" :src="faviconURL(node.url)" alt=""/>
+      </el-icon>
+      {{ node.title }}
+    </el-link>
   </template>
 </template>
 
