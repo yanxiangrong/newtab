@@ -79,17 +79,14 @@ onMounted(() => {
 <template>
   <div class="background">
     <el-container class="container">
-      <el-header>
+      <el-header style="padding: 0">
         <el-menu mode="horizontal" show-timeout="0" unique-opened @select="handleSelect" :default-active="activeMenu">
           <template v-for="node in bookmarks" :key="node.id">
             <el-sub-menu v-if="node.children" :index="node.id">
               <template #title>{{ node.title }}</template>
               <bookmarks-tree :nodes="node.children"/>
             </el-sub-menu>
-            <el-menu-item v-else :index="node.id" @click="node.url && openPage(node.url)">{{
-                node.title
-              }}
-            </el-menu-item>
+            <el-link v-else :href="node.url" class="bookmark-link">{{ node.title }}</el-link>
           </template>
         </el-menu>
       </el-header>
@@ -124,5 +121,18 @@ onMounted(() => {
   display: grid;
   place-items: center;
   height: 100%;
+}
+
+.bookmark-link {
+  justify-content: start;
+  align-items: center;
+  background-color: var(--el-menu-bg-color);
+  color: var(--el-menu-text-color);
+  display: flex;
+  font-size: var(--el-menu-item-font-size);
+  height: var(--el-menu-item-height);
+  line-height: var(--el-menu-item-height);
+  padding: 0 var(--el-menu-base-level-padding);
+  white-space: nowrap;
 }
 </style>

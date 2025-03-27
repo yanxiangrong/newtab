@@ -13,6 +13,21 @@ const openPage = (url: string) => window.location.assign(url)
       <template #title>{{ node.title }}</template>
       <bookmarks-tree :nodes="node.children"/>
     </el-sub-menu>
-    <el-menu-item v-else :index="node.id" @click="node.url && openPage(node.url)">{{ node.title }}</el-menu-item>
+    <el-link v-else class="bookmark-link" style="width: 100%" :href="node.url">{{ node.title }}</el-link>
   </template>
 </template>
+
+<style scoped>
+.bookmark-link {
+  justify-content: start;
+  align-items: center;
+  background-color: var(--el-menu-bg-color);
+  color: var(--el-menu-text-color);
+  display: flex;
+  font-size: var(--el-menu-item-font-size);
+  height: var(--el-menu-horizontal-sub-item-height);
+  line-height: var(--el-menu-horizontal-sub-item-height);
+  padding: 0 10px;
+  white-space: nowrap;
+}
+</style>
