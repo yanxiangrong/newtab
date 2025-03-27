@@ -13,7 +13,9 @@ const openPage = (url: string) => window.location.assign(url)
       <template #title>{{ node.title }}</template>
       <bookmarks-tree :nodes="node.children"/>
     </el-sub-menu>
-    <el-link v-else class="bookmark-link" style="width: 100%" :href="node.url">{{ node.title }}</el-link>
+    <div v-else class="bookmark-link">
+      <el-link style="width: 100%; justify-content: start" :href="node.url">{{ node.title }}</el-link>
+    </div>
   </template>
 </template>
 
@@ -29,5 +31,9 @@ const openPage = (url: string) => window.location.assign(url)
   line-height: var(--el-menu-horizontal-sub-item-height);
   padding: 0 10px;
   white-space: nowrap;
+}
+
+.el-link {
+  --el-link-text-color: var(--el-menu-text-color);
 }
 </style>

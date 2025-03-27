@@ -86,7 +86,9 @@ onMounted(() => {
               <template #title>{{ node.title }}</template>
               <bookmarks-tree :nodes="node.children"/>
             </el-sub-menu>
-            <el-link v-else :href="node.url" class="bookmark-link">{{ node.title }}</el-link>
+            <div v-else class="bookmark-link">
+              <el-link :href="node.url">{{ node.title }}</el-link>
+            </div>
           </template>
         </el-menu>
       </el-header>
@@ -101,6 +103,10 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.el-menu--horizontal {
+  --el-menu-horizontal-height: 40px;
+}
+
 .background {
   background-image: url("https://bing.ee123.net/img/");
   width: 100%;
@@ -130,9 +136,12 @@ onMounted(() => {
   color: var(--el-menu-text-color);
   display: flex;
   font-size: var(--el-menu-item-font-size);
-  height: var(--el-menu-item-height);
-  line-height: var(--el-menu-item-height);
+  height: 100%;
   padding: 0 var(--el-menu-base-level-padding);
   white-space: nowrap;
+}
+
+.el-link {
+  --el-link-text-color: var(--el-menu-text-color);
 }
 </style>
