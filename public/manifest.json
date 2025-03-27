@@ -11,6 +11,13 @@
     "newtab": "index.html"
   },
   "permissions": [
-    "bookmarks"
+    "bookmarks",
+    "storage",
+    "unlimitedStorage",
+    "topSites",
+    "favicon"
+  ],
+  "host_permissions": [
+    "<all_urls>"
   ]
 }
