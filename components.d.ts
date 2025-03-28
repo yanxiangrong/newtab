@@ -10,6 +10,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     BookmarksBar: typeof import('./src/components/BookmarksBar.vue')['default']
     BookmarksTree: typeof import('./src/components/BookmarksTree.vue')['default']
+    ElAutocomplete: typeof import('element-plus/es')['ElAutocomplete']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElContainer: typeof import('element-plus/es')['ElContainer']
     ElDrawer: typeof import('element-plus/es')['ElDrawer']
@@ -23,6 +24,7 @@ declare module 'vue' {
     ElMain: typeof import('element-plus/es')['ElMain']
     ElMenu: typeof import('element-plus/es')['ElMenu']
     ElOption: typeof import('element-plus/es')['ElOption']
+    ElPopover: typeof import('element-plus/es')['ElPopover']
     ElSelect: typeof import('element-plus/es')['ElSelect']
     ElSubMenu: typeof import('element-plus/es')['ElSubMenu']
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
