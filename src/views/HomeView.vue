@@ -6,21 +6,25 @@ import {Folder} from "@element-plus/icons-vue";
 
 
 const bookmarks = ref<chrome.bookmarks.BookmarkTreeNode[]>();
+const otherBookmarks = ref<chrome.bookmarks.BookmarkTreeNode[]>();
 
 if (chrome.bookmarks) {
   chrome.bookmarks.getTree((tree) => {
     if (!tree || !tree[0].children) {
       return
     }
+    console.log('all', tree)
 
     for (const node of tree[0].children) {
       if (!node.folderType && node.children) {
         bookmarks.value = node.children
         break
       }
-      if (node.folderType === "bookmarks-bar" && node.children) {
+      if (node.folderType === "bookmarks-bar" && node.children && !bookmarks.value) {
         bookmarks.value = node.children
-        break
+      }
+      if (node.folderType === "other" && node.children && !otherBookmarks.value) {
+        otherBookmarks.value = node.children
       }
     }
 
@@ -386,25 +390,38 @@ onMounted(() => {
   <div class="background">
     <el-container class="container">
       <el-header style="padding: 0">
-        <el-menu mode="horizontal" :show-timeout="0" unique-opened :default-active="activeMenu">
-          <template v-for="node in bookmarks">
-            <el-sub-menu v-if="node.children" :index="node.id" :key="node.id">
-              <template #title>
-                <el-icon v-if="node.title" style="margin-right: 8px">
-                  <Folder/>
+        <div style="display: flex;">
+          <el-menu style="flex-grow: 1" mode="horizontal" :show-timeout="0" unique-opened :default-active="activeMenu">
+            <template v-for="node in bookmarks">
+              <el-sub-menu v-if="node.children" :index="node.id" :key="node.id">
+                <template #title>
+                  <el-icon v-if="node.title" style="margin-right: 8px">
+                    <Folder/>
+                  </el-icon>
+                  {{ node.title }}
+                </template>
+                <bookmarks-tree :nodes="node.children"/>
+              </el-sub-menu>
+              <el-link v-else class="bookmark-link" :key="'else' + node.id" :href="node.url">
+                <el-icon v-if="node.url" style="margin-right: 8px">
+                  <img loading="lazy" :src="faviconURL(node.url)" alt=""/>
                 </el-icon>
                 {{ node.title }}
+              </el-link>
+            </template>
+          </el-menu>
+          <el-menu mode="horizontal" :ellipsis="false">
+            <el-sub-menu>
+              <template #title>
+                <el-icon style="margin-right: 8px">
+                  <Folder/>
+                </el-icon>
+                <span>所有书签</span>
               </template>
-              <bookmarks-tree :nodes="node.children"/>
+              <bookmarks-tree v-if="otherBookmarks" :nodes="otherBookmarks"/>
             </el-sub-menu>
-            <el-link v-else class="bookmark-link" :key="'else' + node.id" :href="node.url">
-              <el-icon v-if="node.url" style="margin-right: 8px">
-                <img loading="lazy" :src="faviconURL(node.url)" alt=""/>
-              </el-icon>
-              {{ node.title }}
-            </el-link>
-          </template>
-        </el-menu>
+          </el-menu>
+        </div>
       </el-header>
 
       <el-main>
@@ -454,7 +471,7 @@ onMounted(() => {
   white-space: nowrap;
 }
 
-.el-menu--horizontal>.bookmark-link {
+.el-menu--horizontal > .bookmark-link {
   align-items: center;
   display: inline-flex;
   font-size: var(--el-menu-item-font-size);
