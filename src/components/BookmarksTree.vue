@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {Folder} from "@element-plus/icons-vue";
+import BookmarksItem from "@/components/BookmarksItem.vue";
 
 defineProps<{
   nodes: chrome.bookmarks.BookmarkTreeNode[],
@@ -23,46 +24,17 @@ const faviconURL = (u: string) => {
   <template v-for="node in nodes" :key="node.id">
     <el-sub-menu v-if="node.children" :index="node.id">
       <template #title>
-        <el-icon class="favicon" v-if="node.title" style="margin-right: 8px">
+        <el-icon class="favicon" v-if="node.title">
           <Folder/>
         </el-icon>
         {{ node.title }}
       </template>
       <bookmarks-tree :nodes="node.children"/>
     </el-sub-menu>
-    <el-link v-else class="bookmark-link" :key="'else' + node.id" :href="node.url">
-      <el-icon class="favicon" v-if="node.url" style="margin-right: 8px">
-        <img loading="lazy" :src="faviconURL(node.url)" alt=""/>
-      </el-icon>
-      {{ node.title }}
-    </el-link>
+    <bookmarks-item :title="node.title" :url="node.url || ''"/>
   </template>
 </template>
 
 <style scoped>
-.bookmark-link {
-  justify-content: start;
-  align-items: center;
-  display: flex;
-  font-size: var(--el-menu-item-font-size);
-  height: var(--el-menu-horizontal-sub-item-height);
-  line-height: var(--el-menu-horizontal-sub-item-height);
-  padding: 0 10px;
-  white-space: nowrap;
-}
-
-.el-link {
-  --el-link-text-color: var(--el-menu-text-color);
-}
-
-.el-icon img {
-  object-fit: contain;
-  height: 100%;
-  width: 100%;
-}
-
-.favicon {
-  font-size: 16px;
-}
 
 </style>
