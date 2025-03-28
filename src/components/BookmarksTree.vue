@@ -7,7 +7,7 @@ defineProps<{
 
 const faviconURL = (u: string) => {
   let url: URL
-  if (chrome.runtime) {
+  if (chrome.runtime && chrome.runtime.getURL) {
     url = new URL(chrome.runtime.getURL("/_favicon/"));
     url.searchParams.set("pageUrl", u);
     url.searchParams.set("size", "32");
