@@ -395,7 +395,7 @@ onMounted(() => {
             <template v-for="node in bookmarks">
               <el-sub-menu v-if="node.children" :index="node.id" :key="node.id">
                 <template #title>
-                  <el-icon v-if="node.title" style="margin-right: 8px">
+                  <el-icon class="favicon" v-if="node.title" style="margin-right: 8px">
                     <Folder/>
                   </el-icon>
                   {{ node.title }}
@@ -403,7 +403,7 @@ onMounted(() => {
                 <bookmarks-tree :nodes="node.children"/>
               </el-sub-menu>
               <el-link v-else class="bookmark-link" :key="'else' + node.id" :href="node.url">
-                <el-icon v-if="node.url" style="margin-right: 8px">
+                <el-icon class="favicon" v-if="node.url" style="margin-right: 8px">
                   <img loading="lazy" :src="faviconURL(node.url)" alt=""/>
                 </el-icon>
                 {{ node.title }}
@@ -484,8 +484,8 @@ onMounted(() => {
   --el-link-text-color: var(--el-menu-text-color);
 }
 
-.el-menu--horizontal .el-icon {
-  font-size: 18px;
+.favicon {
+  font-size: 16px;
 }
 
 .el-icon img {
