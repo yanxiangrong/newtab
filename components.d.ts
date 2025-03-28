@@ -8,6 +8,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    BookmarksBar: typeof import('./src/components/BookmarksBar.vue')['default']
     BookmarksTree: typeof import('./src/components/BookmarksTree.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElContainer: typeof import('element-plus/es')['ElContainer']
