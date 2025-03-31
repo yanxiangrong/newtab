@@ -9,7 +9,7 @@ const faviconURL = (u: string) => {
   let faviconUrl: URL
   if (chrome.runtime && chrome.runtime.getURL) {
     faviconUrl = new URL(chrome.runtime.getURL("/_favicon/"));
-    faviconUrl.searchParams.set("pageUrl", `${parsedUrl.host}${parsedUrl.pathname}`);
+    faviconUrl.searchParams.set("pageUrl", `${parsedUrl.protocol}//${parsedUrl.host}${parsedUrl.pathname}`);
     faviconUrl.searchParams.set("size", "16");
   } else {
     faviconUrl = new URL("https://www.google.com/s2/favicons")

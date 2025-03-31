@@ -6,18 +6,6 @@ defineProps<{
   nodes: chrome.bookmarks.BookmarkTreeNode[],
 }>()
 
-const faviconURL = (u: string) => {
-  let url: URL
-  if (chrome.runtime && chrome.runtime.getURL) {
-    url = new URL(chrome.runtime.getURL("/_favicon/"));
-    url.searchParams.set("pageUrl", u);
-    url.searchParams.set("size", "32");
-  } else {
-    url = new URL("https://www.google.com/s2/favicons?domain=" + u)
-  }
-  return url.toString();
-}
-
 </script>
 
 <template>
