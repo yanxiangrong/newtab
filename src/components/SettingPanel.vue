@@ -16,12 +16,14 @@ const config = storeToRefs(configStore)
     <el-form-item label="显示搜索栏">
       <el-switch v-model="config.showSearch.value"/>
     </el-form-item>
+    <template v-if="config.showSearch.value">
     <el-form-item label="搜索引擎">
       <el-select v-model="config.searchEngine.value">
         <el-option v-for="engine in config.searchEngines.value" :key="engine.label" :label="engine.label"
                    :value="engine.label"/>
       </el-select>
     </el-form-item>
+    </template>
   </el-form>
 </template>
 
