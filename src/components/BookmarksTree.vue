@@ -19,7 +19,7 @@ defineProps<{
       </template>
       <bookmarks-tree :nodes="node.children"/>
     </el-sub-menu>
-    <bookmarks-item :title="node.title" :url="node.url || ''"/>
+    <bookmarks-item v-else :title="node.title" :url="node.url || ''"/>
   </template>
 </template>
 
