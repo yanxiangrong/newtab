@@ -13,12 +13,13 @@ const {showBookmark, showSearch, showBackgroundImage, backgroundImageUrl} = stor
 const settingVisible = ref(false)
 
 const backgroundImgLoaded = ref(false)
+const imgKey = ref(0)
 
 </script>
 
 <template>
   <div class="background">
-    <img v-if="showBackgroundImage" class="background-img" :class="{loaded: backgroundImgLoaded}"
+    <img :key="imgKey" v-if="showBackgroundImage" class="background-img" :class="{loaded: backgroundImgLoaded}"
          :src="backgroundImageUrl" @load=" backgroundImgLoaded = true" alt=""/>
     <el-container class="container">
       <el-header style="padding: 0">
@@ -31,7 +32,7 @@ const backgroundImgLoaded = ref(false)
       </el-main>
       <el-footer>
         <div class="options">
-          <el-button circle :icon="Refresh"/>
+          <el-button circle :icon="Refresh" @click="imgKey+=1"/>
           <el-button circle :icon="Setting" @click="settingVisible=true"/>
         </div>
       </el-footer>
