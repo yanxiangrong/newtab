@@ -120,7 +120,7 @@ const fetchSearchSuggestions = async (query: string) => {
 
 const querySearch = async (query: string, cb: (suggestions: object[]) => void) => {
   let suggestions: string[] = []
-  const suggestionNum = 8
+  const suggestionNum = 25
 
   if (query) {
     for (const q of searchHistory.value) {

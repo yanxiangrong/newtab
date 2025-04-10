@@ -27,6 +27,9 @@ const config = storeToRefs(configStore)
     <el-form-item label="显示背景图片">
       <el-switch v-model="config.showBackgroundImage.value"/>
     </el-form-item>
+    <el-form-item label="背景图片地址">
+      <el-input v-model="config.backgroundImageUrl.value"/>
+    </el-form-item>
   </el-form>
 </template>
 

@@ -8,7 +8,7 @@ import {useConfigStore} from "@/stores/configStore.ts";
 import {storeToRefs} from "pinia";
 
 const configStore = useConfigStore()
-const {showBookmark, showSearch, showBackgroundImage} = storeToRefs(configStore)
+const {showBookmark, showSearch, showBackgroundImage, backgroundImageUrl} = storeToRefs(configStore)
 
 const settingVisible = ref(false)
 
@@ -19,7 +19,7 @@ const backgroundImgLoaded = ref(false)
 <template>
   <div class="background">
     <img v-if="showBackgroundImage" class="background-img" :class="{loaded: backgroundImgLoaded}"
-         src="https://bing.ee123.net/img" @load=" backgroundImgLoaded = true" alt=""/>
+         :src="backgroundImageUrl" @load=" backgroundImgLoaded = true" alt=""/>
     <el-container class="container">
       <el-header style="padding: 0">
         <bookmarks-bar v-if="showBookmark"/>
