@@ -24,5 +24,10 @@ defineProps<{
 </template>
 
 <style scoped>
-
+.favicon {
+  font-size: 16px;
+  margin-right: 4px;
+  width: 1em;
+  height: 1em;
+}
 </style>

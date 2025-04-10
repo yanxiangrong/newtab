@@ -7,8 +7,73 @@ import {storeToRefs} from "pinia";
 const configStore = useConfigStore()
 const {searchEngine, searchEngines} = storeToRefs(configStore)
 
-const searchHistory = ref<string[]>(JSON.parse(localStorage.getItem("searchHistory") || "[]"))
-watch(searchHistory, () => localStorage.setItem("searchHistory", JSON.stringify(searchHistory.value)))
+// const searchHistory = ref<string[]>(JSON.parse(localStorage.getItem("searchHistory") || "[]"))
+// watch(searchHistory, () => localStorage.setItem("searchHistory", JSON.stringify(searchHistory.value)))
+
+const searchHistory = ref<string[]>([])
+
+const getSearchHistory = async () => {
+  const searchHistoryAsync = (queryText: string): Promise<{ query: string, time: number }[]> => {
+    return new Promise((resolve) => {
+      let history = <{ query: string, time: number }[]>([])
+      chrome.history.search({text: queryText}, (historyItems) => {
+        const paramsKeys = ['wd', 'q', 'query', 'search', 's']
+
+        for (const historyItem of historyItems) {
+          if (!historyItem.url) continue
+          const urlObj = new URL(historyItem.url)
+
+          let query = ''
+
+          for (const key of paramsKeys) {
+            if (urlObj.searchParams.has(key)) {
+              query = urlObj.searchParams.get(key) || ''
+              break
+            }
+          }
+
+          if (!query) continue
+
+          history.push({
+            query: query,
+            time: historyItem.lastVisitTime ? historyItem.lastVisitTime : 0
+          })
+        }
+
+        resolve(history)
+      })
+    })
+  }
+
+  let chromeSearchHistory = <{ query: string, time: number }[]>([])
+  for (const engine of searchEngines.value) {
+    if (!engine.value) continue
+    const engineUrl = new URL(engine.value)
+    const queryText = engineUrl.origin
+
+    const history = await searchHistoryAsync(queryText)
+    chromeSearchHistory.push(...history)
+  }
+
+  chromeSearchHistory.sort((a, b) => b.time - a.time)
+
+  let uniqueString = new Set()
+  let searchHistory = <string[]>([])
+
+  for (const historyItem of chromeSearchHistory) {
+    if (uniqueString.has(historyItem.query)) continue
+    if (searchHistory.length > 100) break
+    uniqueString.add(historyItem.query)
+    searchHistory.push(historyItem.query)
+  }
+
+
+  return searchHistory
+}
+
+(async () => {
+  searchHistory.value = await getSearchHistory()
+})()
 
 const input = ref('')
 const openSearch = (query: string) => {
@@ -33,10 +98,13 @@ const querySearch = (query: string, cb: (suggestions: object[]) => void) => {
   } else {
     suggestions = searchHistory.value.slice(0, suggestionNum)
   }
-  console.log(query, suggestions)
-  let results = suggestions.map((suggestion) => {return {value: suggestion}})
+  let results = suggestions.map((suggestion) => {
+    return {value: suggestion}
+  })
   cb(results)
 }
+
+
 </script>
 
 <template>

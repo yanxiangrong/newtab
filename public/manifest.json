@@ -15,7 +15,8 @@
     "storage",
     "unlimitedStorage",
     "topSites",
-    "favicon"
+    "favicon",
+    "history"
   ],
   "host_permissions": [
     "<all_urls>"
