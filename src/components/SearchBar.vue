@@ -21,9 +21,9 @@ const openSearch = (query: string) => {
   window.location.assign(s.value + query)
 }
 
-const querySearch = (query: string, cb: (suggestions: string[]) => void) => {
+const querySearch = (query: string, cb: (suggestions: object[]) => void) => {
   let suggestions: string[] = []
-  const suggestionNum = 5
+  const suggestionNum = 8
 
   if (query) {
     for (const q of searchHistory.value) {
@@ -33,8 +33,9 @@ const querySearch = (query: string, cb: (suggestions: string[]) => void) => {
   } else {
     suggestions = searchHistory.value.slice(0, suggestionNum)
   }
-  cb(suggestions)
   console.log(query, suggestions)
+  let results = suggestions.map((suggestion) => {return {value: suggestion}})
+  cb(results)
 }
 </script>
 
