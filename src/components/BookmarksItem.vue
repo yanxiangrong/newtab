@@ -23,7 +23,7 @@ const faviconURL = (u: string) => {
 
 <template>
   <div class="bookmarks-wrap">
-    <el-link :underline="false" class="bookmark-link" :href="url">
+    <el-link :underline="false" class="bookmark-link" :href="url" >
       <el-icon class="favicon" v-if="url">
         <img loading="lazy" :src="faviconURL(url)" alt=""/>
       </el-icon>

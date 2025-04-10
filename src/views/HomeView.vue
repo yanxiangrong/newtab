@@ -7,14 +7,19 @@ import SettingPanel from "@/components/SettingPanel.vue";
 import {useConfigStore} from "@/stores/configStore.ts";
 import {storeToRefs} from "pinia";
 
-const configStore  = useConfigStore()
-const {showBookmark, showSearch} = storeToRefs(configStore)
+const configStore = useConfigStore()
+const {showBookmark, showSearch, showBackgroundImage} = storeToRefs(configStore)
 
 const settingVisible = ref(false)
+
+const backgroundImgLoaded = ref(false)
+
 </script>
 
 <template>
   <div class="background">
+    <img v-if="showBackgroundImage" class="background-img" :class="{loaded: backgroundImgLoaded}"
+         src="https://bing.ee123.net/img" @load=" backgroundImgLoaded = true" alt=""/>
     <el-container class="container">
       <el-header style="padding: 0">
         <bookmarks-bar v-if="showBookmark"/>
@@ -37,22 +42,35 @@ const settingVisible = ref(false)
       title="设置"
       :size="400"
       destroy-on-close>
-      <setting-panel/>
+    <setting-panel/>
   </el-drawer>
 </template>
 
 <style scoped>
 .background {
   background-color: #3c3c3c;
-  background-image: url("https://bing.ee123.net/img/");
   width: 100%;
   height: 100vh;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
+}
+
+.background-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.background-img.loaded {
+  opacity: 1;
 }
 
 .container {
+  position: relative;
   height: 100vh;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.3);

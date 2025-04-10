@@ -5,6 +5,7 @@ export const useConfigStore = defineStore('config', {
         searchEngine: 'Google',
         showBookmark: true,
         showSearch: true,
+        showBackgroundImage: true,
         searchEngines: [
             {label: 'Google', value: 'https://www.google.com/search?q='},
             {label: '百度', value: 'https://www.baidu.com/s?wd='},
