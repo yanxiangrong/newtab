@@ -10,13 +10,14 @@ const {searchEngine, searchEngines} = storeToRefs(configStore)
 // const searchHistory = ref<string[]>(JSON.parse(localStorage.getItem("searchHistory") || "[]"))
 // watch(searchHistory, () => localStorage.setItem("searchHistory", JSON.stringify(searchHistory.value)))
 
+const searchHistoryNum = 1000
 const searchHistory = ref<string[]>([])
 
 const getSearchHistory = async () => {
   const searchHistoryAsync = (queryText: string): Promise<{ query: string, time: number }[]> => {
     return new Promise((resolve) => {
       let history = <{ query: string, time: number }[]>([])
-      chrome.history.search({text: queryText}, (historyItems) => {
+      chrome.history.search({text: queryText, maxResults: searchHistoryNum}, (historyItems) => {
         const paramsKeys = ['wd', 'q', 'query', 'search', 's']
 
         for (const historyItem of historyItems) {
@@ -62,7 +63,7 @@ const getSearchHistory = async () => {
 
   for (const historyItem of chromeSearchHistory) {
     if (uniqueString.has(historyItem.query)) continue
-    if (searchHistory.length > 100) break
+    if (searchHistory.length > searchHistoryNum) break
     uniqueString.add(historyItem.query)
     searchHistory.push(historyItem.query)
   }
@@ -72,6 +73,10 @@ const getSearchHistory = async () => {
 }
 
 (async () => {
+  if (!chrome || !chrome.history) {
+    searchHistory.value = JSON.parse(localStorage.getItem("searchHistory") || "[]")
+    return
+  }
   searchHistory.value = await getSearchHistory()
 })()
 
@@ -86,7 +91,34 @@ const openSearch = (query: string) => {
   window.location.assign(s.value + query)
 }
 
-const querySearch = (query: string, cb: (suggestions: object[]) => void) => {
+const fetchSearchSuggestions = async (query: string) => {
+  const api = new URL('https://suggestion.baidu.com/su')
+  api.searchParams.set('wd', query)
+  api.searchParams.set('action', 'opensearch')
+
+  const response = await fetch(api)
+  if (!response.ok) return
+  // 获取响应头中的 Content-Type
+  const contentType = response.headers.get('Content-Type') || ''
+
+  // 解析 charset
+  const getCharset = (contentType: string): string => {
+    const matches = contentType.match(/charset=([^;]+)/i)
+    return matches ? matches[1].toLowerCase() : 'utf-8' // 默认使用 'utf-8'
+  }
+  const charset = getCharset(contentType)
+
+  // 获取响应的 ArrayBuffer
+  const buffer = await response.arrayBuffer()
+
+  const decodedText = new TextDecoder(charset).decode(buffer)
+
+  const data = JSON.parse(decodedText)
+  if (!data || !data[1]) return
+  return data[1]
+}
+
+const querySearch = async (query: string, cb: (suggestions: object[]) => void) => {
   let suggestions: string[] = []
   const suggestionNum = 8
 
@@ -98,6 +130,17 @@ const querySearch = (query: string, cb: (suggestions: object[]) => void) => {
   } else {
     suggestions = searchHistory.value.slice(0, suggestionNum)
   }
+
+  if (suggestions.length < suggestionNum) {
+    try {
+      const searchSuggestions = await fetchSearchSuggestions(query)
+      if (searchSuggestions) {
+        suggestions.push(...searchSuggestions.slice(0, suggestionNum - suggestions.length))
+      }
+    } catch (e) {
+    }
+  }
+
   let results = suggestions.map((suggestion) => {
     return {value: suggestion}
   })
@@ -109,7 +152,7 @@ const querySearch = (query: string, cb: (suggestions: object[]) => void) => {
 
 <template>
   <el-autocomplete style="max-width: 600px" v-model="input" autofocus size="large" @keydown.enter="openSearch(input)"
-                   :fetch-suggestions="querySearch">
+                   :fetch-suggestions="querySearch" :fit-input-width="true">
     <template #prepend>
       <el-select style="width: 115px" v-model="searchEngine" size="large">
         <el-option v-for="engine in searchEngines" :key="engine.label" :label="engine.label"
