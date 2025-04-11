@@ -84,6 +84,12 @@ const imgKey = ref(0)
   height: 100%;
 }
 
+@media (max-height: 650px) {
+  .search-container {
+    place-items: start;
+  }
+}
+
 .options {
   height: 100%;
   display: flex;
