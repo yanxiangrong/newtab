@@ -11,6 +11,8 @@ const {searchEngine, searchEngines, suggestionCount} = storeToRefs(configStore)
 // const searchHistory = ref<string[]>(JSON.parse(localStorage.getItem("searchHistory") || "[]"))
 // watch(searchHistory, () => localStorage.setItem("searchHistory", JSON.stringify(searchHistory.value)))
 
+const autoComplete = ref()
+
 const searchHistoryNum = 1000
 const searchHistory = ref<string[]>([])
 
@@ -77,7 +79,7 @@ const getSearchHistory = async () => {
 
 const input = ref('')
 const openSearch = (query: string) => {
-  if (!query) return
+  if (!query || autoComplete.value?.highlightedIndex > -1) return
 
   searchHistory.value = [query, ...searchHistory.value.filter(q => q !== query)].slice(0, 100)
 
@@ -179,7 +181,7 @@ const handleSuggestionSelect = (item: SuggestionItem) => {
 </script>
 
 <template>
-  <el-autocomplete style="max-width: 750px" v-model="input" autofocus size="large" @keydown.enter="openSearch(input)"
+  <el-autocomplete ref="autoComplete" style="max-width: 750px" v-model="input" autofocus size="large" @keydown.enter="openSearch(input)"
                    :fetch-suggestions="querySearch" @select="handleSuggestionSelect">
     <template #prepend>
       <el-select style="width: 115px" v-model="searchEngine" size="large">
