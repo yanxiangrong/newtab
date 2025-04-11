@@ -59,5 +59,8 @@ defineProps<{
   text-overflow: ellipsis;
 }
 
+.el-menu--popup .bookmark-span {
+  max-width: 30em;
+}
 
 </style>
