@@ -10,14 +10,16 @@ defineProps<{
 
 <template>
   <template v-for="node in nodes" :key="node.id">
-    <el-sub-menu v-if="node.children" :index="node.id">
+    <el-sub-menu class="sub-menu" v-if="node.children" :index="node.id">
       <template #title>
         <el-icon class="favicon" v-if="node.title">
           <Folder/>
         </el-icon>
         {{ node.title }}
       </template>
-      <bookmarks-tree :nodes="node.children"/>
+      <div class="scroll">
+        <bookmarks-tree :nodes="node.children"/>
+      </div>
     </el-sub-menu>
     <bookmarks-item v-else :title="node.title" :url="node.url || ''"/>
   </template>
@@ -29,5 +31,10 @@ defineProps<{
   margin-right: 4px;
   width: 1em;
   height: 1em;
+}
+
+.scroll {
+  max-height: calc(100vh - 20px);
+  overflow-y: auto;
 }
 </style>
