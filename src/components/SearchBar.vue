@@ -180,7 +180,7 @@ const handleSuggestionSelect = (item: SuggestionItem) => {
 
 <template>
   <el-autocomplete style="max-width: 750px" v-model="input" autofocus size="large" @keydown.enter="openSearch(input)"
-                   :fetch-suggestions="querySearch" :fit-input-width="true" @select="handleSuggestionSelect">
+                   :fetch-suggestions="querySearch" @select="handleSuggestionSelect">
     <template #prepend>
       <el-select style="width: 115px" v-model="searchEngine" size="large">
         <el-option v-for="engine in searchEngines" :key="engine.label" :label="engine.label"
@@ -215,11 +215,14 @@ const handleSuggestionSelect = (item: SuggestionItem) => {
 .suggestion-wrapper {
   display: flex;
   align-items: center;
+  overflow: hidden;
 }
 
 .suggestion-text {
   margin-left: 10px;
   margin-right: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .suggestion-link {
