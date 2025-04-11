@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import {ref, watch} from 'vue'
-import {Search} from "@element-plus/icons-vue";
+import {Search, Star, Link} from "@element-plus/icons-vue";
 import {useConfigStore} from "@/stores/configStore.ts";
 import {storeToRefs} from "pinia";
+import {faviconURL} from "@/utils/utils.ts";
 
 const configStore = useConfigStore()
-const {searchEngine, searchEngines} = storeToRefs(configStore)
+const {searchEngine, searchEngines, suggestionCount} = storeToRefs(configStore)
 
 // const searchHistory = ref<string[]>(JSON.parse(localStorage.getItem("searchHistory") || "[]"))
 // watch(searchHistory, () => localStorage.setItem("searchHistory", JSON.stringify(searchHistory.value)))
@@ -13,22 +14,6 @@ const {searchEngine, searchEngines} = storeToRefs(configStore)
 const searchHistoryNum = 1000
 const searchHistory = ref<string[]>([])
 
-
-const searchChromeHistoryAsync = (queryText: string, maxResults: number): Promise<chrome.history.HistoryItem[]> => {
-  return new Promise((resolve) => {
-    chrome.history.search({text: queryText, maxResults: maxResults}, (historyItems) => {
-      resolve(historyItems)
-    })
-  })
-}
-
-const searchChromeBookmarkAsync = (queryText: string, maxResults: number): Promise<chrome.bookmarks.BookmarkTreeNode[]> => {
-  return new Promise((resolve) => {
-    chrome.bookmarks.search(queryText, (bookmarks) => {
-      resolve(bookmarks)
-    })
-  })
-}
 
 const getSearchHistory = async () => {
   const paramsKeys = ['wd', 'q', 'query', 'search', 's']
@@ -41,7 +26,11 @@ const getSearchHistory = async () => {
 
     let history = <{ query: string, time: number }[]>([])
 
-    const historyItems = await searchChromeHistoryAsync(queryText, searchHistoryNum)
+    const historyItems = await chrome.history.search({
+      text: queryText,
+      maxResults: searchHistoryNum,
+      startTime: 14 * 24 * 60 * 60 * 1000
+    })
     for (const historyItem of historyItems) {
       if (!historyItem.url) continue
       const urlObj = new URL(historyItem.url)
@@ -127,37 +116,42 @@ const fetchSearchSuggestions = async (query: string): Promise<string[]> => {
 interface SuggestionItem {
   value: string
   link: string | null
+  type: 'history' | 'bookmark' | 'search'
 }
 
 const querySearch = async (query: string, cb: (suggestions: object[]) => void) => {
   let suggestions: SuggestionItem[] = []
-  const suggestionNum = 25
+  const suggestionNum = suggestionCount.value
 
   if (!query) {
-    suggestions = searchHistory.value.slice(0, suggestionNum).map(item => {
-      return {value: item, link: null}
-    })
+    suggestions.push(...searchHistory.value.slice(0, suggestionNum).map(item => {
+      return <SuggestionItem>{value: item, link: null, type: 'search'}
+    }))
   } else {
     // 书签
     if (chrome && chrome.bookmarks) {
       const bookmarks = await chrome.bookmarks.search(query)
-      suggestions.push(...bookmarks.map(item => {
-        return {value: item.title || '', link: item.url || null}
-      }).slice(0, suggestionNum - suggestions.length))
+      suggestions.push(...bookmarks.filter(item => item.url).slice(0, suggestionNum - suggestions.length).map(item => {
+        return <SuggestionItem>{value: item.title || '', link: item.url || null, type: 'bookmark'}
+      }))
     }
 
     // 搜索历史
     if (suggestions.length < suggestionNum) {
       suggestions.push(...searchHistory.value.filter(q => q.includes(query)).slice(0, suggestionNum - suggestions.length).map(item => {
-        return {value: item, link: null}
+        return <SuggestionItem>{value: item, link: null, type: 'search'}
       }))
     }
 
     // Chrome 历史记录
     if (suggestions.length < suggestionNum && chrome && chrome.history) {
-      const historyItems = await searchChromeHistoryAsync(query, suggestionNum - suggestions.length)
+      const historyItems = await chrome.history.search({
+        text: query,
+        maxResults: suggestionNum - suggestions.length,
+        startTime: 14 * 24 * 60 * 60 * 1000
+      })
       suggestions.push(...historyItems.map(item => {
-        return {value: item.title || '', link: item.url || null}
+        return <SuggestionItem>{value: item.title || '', link: item.url || null, type: 'history'}
       }))
     }
 
@@ -166,7 +160,7 @@ const querySearch = async (query: string, cb: (suggestions: object[]) => void) =
       try {
         const searchSuggestions = await fetchSearchSuggestions(query)
         suggestions.push(...searchSuggestions.slice(0, suggestionNum - suggestions.length).map(item => {
-          return {value: item, link: null}
+          return <SuggestionItem>{value: item, link: null, type: 'search'}
         }))
       } catch (e) {
       }
@@ -176,12 +170,17 @@ const querySearch = async (query: string, cb: (suggestions: object[]) => void) =
   cb(suggestions)
 }
 
+const handleSuggestionSelect = (item: SuggestionItem) => {
+  if (item.link) {
+    window.location.assign(item.link)
+  }
+}
 
 </script>
 
 <template>
-  <el-autocomplete style="max-width: 600px" v-model="input" autofocus size="large" @keydown.enter="openSearch(input)"
-                   :fetch-suggestions="querySearch" :fit-input-width="true">
+  <el-autocomplete style="max-width: 750px" v-model="input" autofocus size="large" @keydown.enter="openSearch(input)"
+                   :fetch-suggestions="querySearch" :fit-input-width="true" @select="handleSuggestionSelect">
     <template #prepend>
       <el-select style="width: 115px" v-model="searchEngine" size="large">
         <el-option v-for="engine in searchEngines" :key="engine.label" :label="engine.label"
@@ -191,9 +190,50 @@ const querySearch = async (query: string, cb: (suggestions: object[]) => void) =
     <template #append>
       <el-button :icon="Search" @click="openSearch(input)"/>
     </template>
+    <template #default="{item}">
+      <div class="suggestion-wrapper">
+        <el-icon>
+          <img v-if="item.link" loading="lazy" :src="faviconURL(item.link)" alt=""/>
+          <template v-else>
+            <Link v-if="item.type === 'history'"/>
+            <Star v-else-if="item.type === 'bookmark'"/>
+            <Search v-else-if="item.type === 'search'"/>
+          </template>
+        </el-icon>
+        <div class="suggestion-text">{{ item.value }}</div>
+        <el-link v-if="item.link" class="suggestion-link" :underline="false" type="primary" :href="item.link">
+          <span class="suggestion-link-text">
+            {{ item.link }}
+          </span>
+        </el-link>
+      </div>
+    </template>
   </el-autocomplete>
 </template>
 
 <style scoped>
+.suggestion-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.suggestion-text {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.suggestion-link {
+  width: 0;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  justify-content: start;
+}
+
+.suggestion-link-text {
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 </style>

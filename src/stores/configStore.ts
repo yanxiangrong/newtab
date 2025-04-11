@@ -14,6 +14,7 @@ export const useConfigStore = defineStore('config', {
             {label: '搜狗', value: 'https://www.sogou.com/web?query='},
             {label: '360', value: 'https://www.so.com/s?q='},
             {label: 'DuckDuckGo', value: 'https://duckduckgo.com/?q='},
-        ]
+        ],
+        suggestionCount: 25,
     })
 })

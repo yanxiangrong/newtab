@@ -26,6 +26,12 @@ const config = storeToRefs(configStore)
       <el-form-item label="管理搜索引擎">
         <el-button>管理搜索引擎</el-button>
       </el-form-item>
+      <el-form-item label="搜索建议数量">
+        <el-input-number v-model="config.suggestionCount.value" :min="0" :max="1000"/>
+      </el-form-item>
+      <el-form-item label="搜索建议设置">
+        <el-button>搜索建议设置</el-button>
+      </el-form-item>
     </template>
     <el-form-item label="显示背景图片">
       <el-switch v-model="config.showBackgroundImage.value"/>
