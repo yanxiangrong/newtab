@@ -2,25 +2,33 @@
 import SearchBar from "@/components/SearchBar.vue";
 import BookmarksBar from "@/components/BookmarksBar.vue";
 import {Refresh, Setting} from "@element-plus/icons-vue";
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import SettingPanel from "@/components/SettingPanel.vue";
 import {useConfigStore} from "@/stores/configStore.ts";
 import {storeToRefs} from "pinia";
 
 const configStore = useConfigStore()
-const {showBookmark, showSearch, showBackgroundImage, backgroundImageUrl} = storeToRefs(configStore)
+const {showBookmark, showSearch, showBackgroundImage, backgroundImageUrl, fontFamily} = storeToRefs(configStore)
 
 const settingVisible = ref(false)
 
 const backgroundImgLoaded = ref(false)
 const imgKey = ref(0)
 
+const setFontFamily = (fontFamily: string) => {
+  document.body.style.fontFamily = fontFamily
+}
+
+watch(fontFamily, (newFontFamily) => {
+  setFontFamily(newFontFamily)
+})
+setFontFamily(fontFamily.value)
 </script>
 
 <template>
   <div class="background">
     <img :key="imgKey" v-if="showBackgroundImage" class="background-img" :class="{loaded: backgroundImgLoaded}"
-         :src="backgroundImageUrl" @load=" backgroundImgLoaded = true" alt=""/>
+         :src="backgroundImageUrl" @load="backgroundImgLoaded = true" alt=""/>
     <el-container class="container">
       <el-header style="padding: 0">
         <bookmarks-bar v-if="showBookmark"/>

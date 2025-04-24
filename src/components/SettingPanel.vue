@@ -2,9 +2,21 @@
 
 import {useConfigStore} from "@/stores/configStore.ts";
 import {storeToRefs} from "pinia";
+import {ref, watch, onMounted} from 'vue'
 
 const configStore = useConfigStore()
 const config = storeToRefs(configStore)
+
+const fontTest = ref<HTMLElement>()
+watch(config.fontFamily, (newFontFamily) => {
+  if (!fontTest.value) return
+  fontTest.value.style.fontFamily = newFontFamily
+})
+
+onMounted(() => {
+  if (!fontTest.value) return
+  fontTest.value.style.fontFamily = config.fontFamily.value
+})
 
 </script>
 
@@ -41,6 +53,14 @@ const config = storeToRefs(configStore)
         <el-input v-model="config.backgroundImageUrl.value"/>
       </el-form-item>
     </template>
+    <el-form-item label="字体">
+      <el-input v-model="config.fontFamily.value"/>
+    </el-form-item>
+    <el-card shadow="never">
+      <div ref="fontTest">The quick brown fox jumps over the lazy dog. 1234567890<br/>
+        敏捷的棕色狐狸跳过了懒狗。你好，World！@Vue字体测试
+      </div>
+    </el-card>
   </el-form>
 </template>
 

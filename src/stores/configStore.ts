@@ -16,5 +16,6 @@ export const useConfigStore = defineStore('config', {
             {label: 'DuckDuckGo', value: 'https://duckduckgo.com/?q='},
         ],
         suggestionCount: 25,
+        fontFamily: 'initial',
     })
 })
