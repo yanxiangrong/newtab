@@ -3,14 +3,13 @@ import {Folder} from "@element-plus/icons-vue";
 import {faviconURL} from "@/utils/utils.ts";
 
 defineProps<{
-  nodes: chrome.bookmarks.BookmarkTreeNode[],
+  node: chrome.bookmarks.BookmarkTreeNode,
 }>()
 
 </script>
 
 <template>
-  <li v-for="node in nodes" class="bookmarks-wrap" :key="node.id">
-    <el-dropdown v-if="node.children" :index="node.id">
+    <el-dropdown class="bookmarks-wrap" v-if="node.children" :index="node.id">
       <div class="bookmarks-text">
         <el-icon class="favicon" v-if="node.title">
           <Folder/>
@@ -19,21 +18,20 @@ defineProps<{
       </div>
       <template #dropdown>
         <el-dropdown-menu>
-          <bookmarks-tree :nodes="node.children"/>
+          <el-dropdown-item v-for="child in node.children" :key="child.id">
+            <bookmarks-tree :node="child"/>
+          </el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
-    <el-link v-else :underline="false" :href="node.url">
+    <el-link class="bookmarks-wrap" v-else :underline="false" :href="node.url">
       <div class="bookmarks-text">
         <el-icon class="favicon" v-if="node.url">
           <img loading="lazy" :src="faviconURL(node.url)" alt=""/>
         </el-icon>
-        <span class="bookmark-span">
-        {{ node.title }}
-        </span>
+        <span class="bookmark-span">{{ node.title }}</span>
       </div>
     </el-link>
-  </li>
 </template>
 
 <style scoped>
@@ -51,33 +49,13 @@ defineProps<{
   height: 1em;
 }
 
-.scroll {
-  max-height: calc(100vh - 20px);
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  list-style: none;
-  padding: 0;
-}
-
 .bookmarks-text {
   display: inline-flex;
   align-items: center;
   flex-wrap: nowrap;
   text-wrap: nowrap;
   box-sizing: border-box;
-  color: var(--el-menu-text-color);
-  height: 24px;
-  padding: 8px;
-  transition: background-color 0.3s ease;
-  background-color: rgba(255, 255, 255, 0);
-  border-radius: 12px;
-}
-
-.bookmarks-text:hover,
-.bookmarks-text:hover:focus,
-.bookmarks-text:hover:focus-visible {
-  background-color: rgba(255, 255, 255, 0.3);
+  line-height: 1;
 }
 
 .bookmark-span {
@@ -91,9 +69,5 @@ defineProps<{
   color: inherit !important;
   text-decoration: none !important;
   background: none !important;
-}
-
-.el-tooltip__trigger:focus-visible{
-  outline: none !important;
 }
 </style>
