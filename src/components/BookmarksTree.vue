@@ -9,27 +9,23 @@ defineProps<{
 </script>
 
 <template>
-  <el-dropdown v-if="node.children" :index="node.id">
-    <el-link :underline="false" :href="node.url">
+  <el-sub-menu v-if="node.children" :index="node.id" teleported popper-class="scroll-menu-list">
+    <template #title>
       <el-icon class="favicon" v-if="node.title">
         <Folder/>
       </el-icon>
       <span class="bookmark-span">{{ node.title }}</span>
-    </el-link>
-    <template #dropdown>
-      <el-dropdown-menu>
-        <el-dropdown-item v-for="child in node.children" :key="child.id">
-          <bookmarks-tree :node="child"/>
-        </el-dropdown-item>
-      </el-dropdown-menu>
     </template>
-  </el-dropdown>
-  <el-link v-else :underline="false" :href="node.url">
-    <el-icon class="favicon" v-if="node.url">
-      <img loading="lazy" :src="faviconURL(node.url)" alt=""/>
-    </el-icon>
-    <span class="bookmark-span">{{ node.title }}</span>
-  </el-link>
+    <bookmarks-tree v-for="child in node.children" :key="child.id" :node="child"/>
+  </el-sub-menu>
+  <el-menu-item v-else>
+    <el-link :underline="false" :href="node.url">
+      <el-icon class="favicon" v-if="node.url">
+        <img loading="lazy" :src="faviconURL(node.url)" alt=""/>
+      </el-icon>
+      <span class="bookmark-span">{{ node.title }}</span>
+    </el-link>
+  </el-menu-item>
 </template>
 
 <style scoped>
@@ -47,8 +43,26 @@ defineProps<{
   text-overflow: ellipsis;
 }
 
-.el-dropdown__popper .el-dropdown-menu {
-  max-height: calc(100vh - 60px);
+.el-link {
+  transition: color var(--el-transition-duration);
 }
+
+.el-link:hover {
+  color: inherit;
+}
+
+.el-menu-item > .el-link {
+  width: 100%;
+  justify-content: flex-start;
+}
+
+</style>
+
+<style>
+.scroll-menu-list ul {
+  max-height: calc(100vh - 60px);
+  overflow-y: auto;
+}
+
 
 </style>
