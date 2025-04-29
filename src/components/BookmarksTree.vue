@@ -44,7 +44,7 @@ defineProps<{
 }
 
 .el-link {
-  transition: color var(--el-transition-duration);
+  transition: background-color 0.3s ease;
 }
 
 .el-link:hover {

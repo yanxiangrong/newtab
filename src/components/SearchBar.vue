@@ -256,7 +256,13 @@ const handleSuggestionSelect = (item: SuggestionItem) => {
   --el-border-radius-base: 20px
 }
 
-.search-input .el-input__wrapper {
-  background-color: rgba(38, 39, 39, 0.5);
+.search-input .el-input {
+  background-color: color-mix(in srgb, var(--el-bg-color), transparent 50%);
+  backdrop-filter: blur(8px);
+  border-radius: var(--el-border-radius-base);
+}
+
+.search-input input {
+  font-family: inherit;
 }
 </style>

@@ -57,7 +57,7 @@ setFontFamily(fontFamily.value)
 
 <style scoped>
 .background {
-  background-color: #3c3c3c;
+  background-color: var(--el-bg-color);
   width: 100%;
   height: 100vh;
 }
