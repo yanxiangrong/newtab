@@ -12,3 +12,7 @@ export const faviconURL = (u: string) => {
     }
     return faviconUrl.toString();
 }
+
+export function isChromeExtension(): boolean {
+    return typeof chrome !== 'undefined' && !!chrome.runtime?.id
+}

@@ -4,6 +4,7 @@ import {Search, Star, Link} from "@element-plus/icons-vue";
 import {useConfigStore} from "@/stores/configStore.ts";
 import {storeToRefs} from "pinia";
 import {faviconURL} from "@/utils/utils.ts";
+import {fetchSearchSuggestions} from "@/utils/baiduSuggestion.ts";
 
 const configStore = useConfigStore()
 const {searchEngine, searchEngines, suggestionCount} = storeToRefs(configStore)
@@ -88,28 +89,6 @@ const openSearch = (query: string) => {
   window.location.assign(s.value + query)
 }
 
-const fetchSearchSuggestions = async (query: string): Promise<string[]> => {
-  return new Promise((resolve, reject) => {
-    const cbName = 'jsonp_cb_' + Math.random().toString(36).substring(2)
-    ;(window as any)[cbName] = (data: any) => {
-      // 结果在 data.s，是数组
-      resolve(data.s)
-      // 清理
-      delete (window as any)[cbName]
-      document.body.removeChild(script)
-    }
-    const script = document.createElement('script')
-    script.onerror = () => {
-      reject(new Error('JSONP request failed'))
-      delete (window as any)[cbName]
-      document.body.removeChild(script)
-    }
-    script.src = `https://suggestion.baidu.com/su?wd=${encodeURIComponent(query)}&cb=${cbName}`
-    document.body.appendChild(script)
-    // 可选超时
-    // setTimeout(() => { ...reject...清理... }, 5000)
-  })
-}
 
 interface SuggestionItem {
   value: string
