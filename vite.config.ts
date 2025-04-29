@@ -15,13 +15,21 @@ export default defineConfig({
         vue(),
         vueDevTools(),
         AutoImport({
-            imports: ['vue'],
+            imports: [
+                'vue',
+                'vue-router',
+                'pinia'
+            ],
             resolvers: [
                 ElementPlusResolver(),
                 IconsResolver({
                     prefix: 'Icon',
                 })
             ],
+            dts: 'src/auto-imports.d.ts',
+            eslintrc: {
+                enabled: true
+            },
         }),
         Components({
             resolvers: [
@@ -30,6 +38,7 @@ export default defineConfig({
                 }),
                 ElementPlusResolver()
             ],
+            dts: 'src/components.d.ts',
         }),
         Icons({
             autoInstall: true,
