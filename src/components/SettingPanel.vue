@@ -3,6 +3,8 @@
 import {useConfigStore} from "@/stores/configStore.ts";
 import {storeToRefs} from "pinia";
 import {ref, watch, onMounted} from 'vue'
+import {ElMessage} from "element-plus";
+import {type BookmarkNode, countBookmarks, genBookmarkHtml, parseBookmarksHtml} from "@/utils/bookmarkParser.ts";
 
 const configStore = useConfigStore()
 const config = storeToRefs(configStore)
@@ -12,6 +14,42 @@ watch(config.fontFamily, (newFontFamily) => {
   if (!fontTest.value) return
   fontTest.value.style.fontFamily = newFontFamily
 })
+
+const bookmarkInput = ref<HTMLInputElement>()
+
+function triggerImport() {
+  bookmarkInput.value?.click()
+}
+
+function onImportBookmark(e: Event) {
+  const files = (e.target as HTMLInputElement).files
+  if (!files || !files.length) return
+  const file = files[0]
+  const reader = new FileReader()
+  reader.onload = function (evt) {
+    const htmlString = evt.target?.result as string
+    const tree: BookmarkNode[] = parseBookmarksHtml(htmlString)
+
+    configStore.bookmarks = tree
+    ElMessage.success('已导入书签' + countBookmarks(tree) + '条')
+  }
+  reader.readAsText(file)
+}
+
+function onExportBookmark() {
+  const bookmarks = configStore.bookmarks // 需替换为真实数据源
+  // 生成标准Bookmark html
+  const html = genBookmarkHtml(bookmarks)
+  const blob = new Blob([html], {type: "text/html"})
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = 'bookmarks.html'
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(url)
+}
 
 onMounted(() => {
   if (!fontTest.value) return
@@ -56,11 +94,16 @@ onMounted(() => {
     <el-form-item label="字体">
       <el-input v-model="config.fontFamily.value"/>
     </el-form-item>
-    <el-card shadow="never">
+    <el-card shadow="never" style="margin-bottom: 18px">
       <div ref="fontTest">The quick brown fox jumps over the lazy dog. 1234567890<br/>
         敏捷的棕色狐狸跳过了懒狗。你好，World！@Vue字体测试
       </div>
     </el-card>
+    <el-form-item label="书签管理">
+      <el-button @click="onExportBookmark">导出书签</el-button>
+      <el-button @click="triggerImport">导入书签</el-button>
+      <input ref="bookmarkInput" type="file" accept=".html" @change="onImportBookmark" style="display: none"/>
+    </el-form-item>
   </el-form>
 </template>
 

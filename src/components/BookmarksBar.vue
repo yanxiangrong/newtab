@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import {ref} from "vue";
 import BookmarksTree from "@/components/BookmarksTree.vue";
+import {useConfigStore} from "@/stores/configStore.ts";
+import {bookmarkNodeToChromeTree} from "@/utils/bookmarkParser.ts";
+
+const configStore = useConfigStore()
 
 const bookmarks = ref<chrome.bookmarks.BookmarkTreeNode[]>();
 const otherBookmarks = ref<chrome.bookmarks.BookmarkTreeNode[]>();
@@ -29,6 +33,7 @@ if (chrome.bookmarks) {
     console.log('chrome.bookmarks:', bookmarks.value)
   })
 } else {
+  bookmarks.value = bookmarkNodeToChromeTree(configStore.bookmarks)
   console.log('chrome.bookmarks is not available')
 }
 

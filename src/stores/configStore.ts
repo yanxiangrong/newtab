@@ -1,4 +1,5 @@
 import {defineStore} from "pinia";
+import type {BookmarkNode} from "@/utils/bookmarkParser.ts";
 
 export const useConfigStore = defineStore('config', {
     state: () => ({
@@ -17,5 +18,6 @@ export const useConfigStore = defineStore('config', {
         ],
         suggestionCount: 25,
         fontFamily: 'initial',
+        bookmarks: [] as Array<BookmarkNode>
     })
 })
