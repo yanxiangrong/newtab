@@ -117,58 +117,63 @@ interface SuggestionItem {
   type: 'history' | 'bookmark' | 'search'
 }
 
-const querySearch = async (query: string, cb: (suggestions: object[]) => void) => {
-  let suggestions: SuggestionItem[] = []
-  const suggestionNum = suggestionCount.value
+const querySearch = (query: string, cb: (suggestions: Record<string, any>[]) => void): void => {
+  const suggestionNum = suggestionCount.value;
 
-  if (!query) {
-    suggestions.push(...searchHistory.value.slice(0, suggestionNum).map(item => {
-      return <SuggestionItem>{value: item, link: null, type: 'search'}
-    }))
-  } else {
-    // 书签
-    if (chrome && chrome.bookmarks) {
-      const bookmarks = await chrome.bookmarks.search(query)
-      suggestions.push(...bookmarks.filter(item => item.url).slice(0, suggestionNum - suggestions.length).map(item => {
-        return <SuggestionItem>{value: item.title || '', link: item.url || null, type: 'bookmark'}
-      }))
-    }
+  const fetchSuggestions = async () => {
+    let suggestions: SuggestionItem[] = [];
 
-    // 搜索历史
-    if (suggestions.length < suggestionNum) {
-      suggestions.push(...searchHistory.value.filter(q => q.includes(query)).slice(0, suggestionNum - suggestions.length).map(item => {
-        return <SuggestionItem>{value: item, link: null, type: 'search'}
-      }))
-    }
+    if (!query) {
+      suggestions.push(...searchHistory.value.slice(0, suggestionNum).map(item => {
+        return <SuggestionItem>{ value: item, link: null, type: 'search' };
+      }));
+    } else {
+      // 书签
+      if (chrome && chrome.bookmarks) {
+        const bookmarks = await chrome.bookmarks.search(query);
+        suggestions.push(...bookmarks.filter(item => item.url).slice(0, suggestionNum - suggestions.length).map(item => {
+          return <SuggestionItem>{ value: item.title || '', link: item.url || null, type: 'bookmark' };
+        }));
+      }
 
-    // Chrome 历史记录
-    if (suggestions.length < suggestionNum && chrome && chrome.history) {
-      const historyItems = await chrome.history.search({
-        text: query,
-        maxResults: suggestionNum - suggestions.length,
-        startTime: 14 * 24 * 60 * 60 * 1000
-      })
-      suggestions.push(...historyItems.map(item => {
-        return <SuggestionItem>{value: item.title || '', link: item.url || null, type: 'history'}
-      }))
-    }
+      // 搜索历史
+      if (suggestions.length < suggestionNum) {
+        suggestions.push(...searchHistory.value.filter(q => q.includes(query)).slice(0, suggestionNum - suggestions.length).map(item => {
+          return <SuggestionItem>{ value: item, link: null, type: 'search' };
+        }));
+      }
 
-    // 搜索建议
-    if (suggestions.length < suggestionNum) {
-      try {
-        const searchSuggestions = await fetchSearchSuggestions(query)
-        suggestions.push(...searchSuggestions.slice(0, suggestionNum - suggestions.length).map(item => {
-          return <SuggestionItem>{value: item, link: null, type: 'search'}
-        }))
-      } catch (e) {
+      // Chrome 历史记录
+      if (suggestions.length < suggestionNum && chrome && chrome.history) {
+        const historyItems = await chrome.history.search({
+          text: query,
+          maxResults: suggestionNum - suggestions.length,
+          startTime: 14 * 24 * 60 * 60 * 1000
+        });
+        suggestions.push(...historyItems.map(item => {
+          return <SuggestionItem>{ value: item.title || '', link: item.url || null, type: 'history' };
+        }));
+      }
+
+      // 搜索建议
+      if (suggestions.length < suggestionNum) {
+        try {
+          const searchSuggestions = await fetchSearchSuggestions(query);
+          suggestions.push(...searchSuggestions.slice(0, suggestionNum - suggestions.length).map(item => {
+            return <SuggestionItem>{ value: item, link: null, type: 'search' };
+          }));
+        } catch (e) {
+        }
       }
     }
-  }
 
-  cb(suggestions)
-}
+    cb(suggestions);
+  };
 
-const handleSuggestionSelect = (item: SuggestionItem) => {
+  fetchSuggestions();
+};
+
+const handleSuggestionSelect = (item: Record<string, any>) => {
   if (item.link) {
     window.location.assign(item.link)
   }
