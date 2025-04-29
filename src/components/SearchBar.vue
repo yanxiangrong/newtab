@@ -251,4 +251,12 @@ const handleSuggestionSelect = (item: SuggestionItem) => {
   font-size: 16px;
   font-weight: 600;
 }
+
+.search-input {
+  --el-border-radius-base: 20px
+}
+
+.search-input .el-input__wrapper {
+  background-color: rgba(38, 39, 39, 0.5);
+}
 </style>
