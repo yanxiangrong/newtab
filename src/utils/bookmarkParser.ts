@@ -6,37 +6,32 @@ export type BookmarkNode = {
 
 // 解析1个DL（即文件夹/ext list）
 function parseDL(dl: HTMLDListElement): BookmarkNode[] {
-    debugger;
     const result: BookmarkNode[] = [];
-    let currFolder: BookmarkNode | null = null;
 
     for (const node of Array.from(dl.children)) {
         if (node.tagName === 'DT') {
             const dt = node as HTMLElement;
             const firstChild = dt.firstElementChild;
-
-            if (!firstChild) continue;
-
-            if (firstChild.tagName === 'H3') {
+            if (firstChild && firstChild.tagName === 'H3') {
                 // 文件夹
-                currFolder = {
+                const folder: BookmarkNode = {
                     title: firstChild.textContent || '未命名文件夹',
                     children: []
                 };
-                // 下一个兄弟可能是DL
-                const next = dt.nextElementSibling;
-                if (next && next.tagName === 'DL') {
-                    currFolder.children = parseDL(next as HTMLDListElement);
-                }
-                result.push(currFolder);
-
-            } else if (firstChild.tagName === 'A') {
+                folder.children = parseDL(dt as HTMLDListElement);
+                result.push(folder);
+            } else if (firstChild && firstChild.tagName === 'A') {
                 // 普通书签
                 result.push({
                     title: firstChild.textContent || '',
                     url: (firstChild as HTMLAnchorElement).href
                 });
             }
+        } else if (node.tagName === 'DL') {
+            // 递归解析子DL
+            const subDL = node as HTMLDListElement;
+            const subNodes = parseDL(subDL);
+            result.push(...subNodes);
         }
     }
     return result;

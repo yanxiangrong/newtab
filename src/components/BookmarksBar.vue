@@ -33,7 +33,16 @@ if (chrome.bookmarks) {
     console.log('chrome.bookmarks:', bookmarks.value)
   })
 } else {
-  bookmarks.value = bookmarkNodeToChromeTree(configStore.bookmarks)
+  const tree = bookmarkNodeToChromeTree(configStore.bookmarks)
+  bookmarks.value = tree[0].children
+  otherBookmarks.value = [
+    {
+      id: '',
+      title: '所有书签',
+      syncing: false,
+      children: tree.slice(1)
+    }
+  ]
   console.log('chrome.bookmarks is not available')
 }
 
