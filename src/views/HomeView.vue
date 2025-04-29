@@ -15,6 +15,8 @@ const settingVisible = ref(false)
 const backgroundImgLoaded = ref(false)
 const imgKey = ref(0)
 
+const isBlurred = ref(false)
+
 const setFontFamily = (fontFamily: string) => {
   document.body.style.fontFamily = fontFamily
 }
@@ -27,7 +29,7 @@ setFontFamily(fontFamily.value)
 
 <template>
   <div class="background">
-    <img :key="imgKey" v-if="showBackgroundImage" class="background-img" :class="{loaded: backgroundImgLoaded}"
+    <img :key="imgKey" v-if="showBackgroundImage" class="background-img" :class="{loaded: backgroundImgLoaded, blurred: isBlurred}"
          :src="backgroundImageUrl" @load="backgroundImgLoaded = true" alt=""/>
     <el-container class="container">
       <el-header style="padding: 0">
@@ -35,7 +37,7 @@ setFontFamily(fontFamily.value)
       </el-header>
       <el-main>
         <div class="search-container">
-          <search-bar v-if="showSearch"/>
+          <search-bar v-if="showSearch" @focusin="isBlurred = true" @focusout="isBlurred = false"/>
         </div>
       </el-main>
       <el-footer>
@@ -71,7 +73,12 @@ setFontFamily(fontFamily.value)
   object-fit: cover;
   object-position: center;
   opacity: 0;
-  transition: opacity 0.5s ease-in-out;
+  transition: opacity 0.3s ease-in-out, filter 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.blurred {
+  filter: blur(16px);
+  transform: scale(1.08);
 }
 
 .background-img.loaded {
