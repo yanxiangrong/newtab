@@ -43,8 +43,9 @@ function onExportBookmark() {
   const blob = new Blob([html], {type: "text/html"})
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
+  const now = new Date()
   a.href = url
-  a.download = 'bookmarks.html'
+  a.download = `bookmarks_${now.getFullYear()}_${now.getMonth() + 1}_${now.getDate()}.html`
   document.body.appendChild(a)
   a.click()
   document.body.removeChild(a)
