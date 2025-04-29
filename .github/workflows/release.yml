@@ -1,0 +1,73 @@
+name: Build, Zip, Tag and Release
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [closed]
+    branches:
+      - master
+
+jobs:
+  build-zip-tag-release:
+    if: (github.event_name == 'push') || (github.event.pull_request.merged == true)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # fetch全部 tag 以便生成新 tag
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build
+        run: pnpm build
+
+      - name: Zip build
+        run: |
+          cd dist
+          zip -r ../build.zip .
+
+      # 自动递增 Tag
+      - name: Auto-bump tag and push
+        id: tag_version
+        run: |
+          git fetch --tags
+          # 获取最新的 v* tag
+          latest_tag=$(git tag -l 'v*' --sort=-v:refname | head -n 1)
+          if [[ $latest_tag == "" ]]; then
+            new_tag="v1.0.0"
+          else
+            IFS='.' read -r -a parts <<< "${latest_tag#v}"
+            major="${parts[0]}"
+            minor="${parts[1]}"
+            patch="${parts[2]}"
+            patch=$((patch+1))
+            new_tag="v$major.$minor.$patch"
+          fi
+          echo "new_tag=${new_tag}" >> $GITHUB_OUTPUT
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag $new_tag
+          git push origin $new_tag
+
+      - name: Release with asset
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag_version.outputs.new_tag }}
+          files: build.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
