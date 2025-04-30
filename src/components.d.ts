@@ -45,6 +45,7 @@ declare module 'vue' {
     SearchBar: typeof import('./components/SearchBar.vue')['default']
     SettingPanel: typeof import('./components/SettingPanel.vue')['default']
     TheWelcome: typeof import('./components/TheWelcome.vue')['default']
+    TimeNow: typeof import('./components/TimeNow.vue')['default']
     WelcomeItem: typeof import('./components/WelcomeItem.vue')['default']
   }
 }

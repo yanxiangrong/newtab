@@ -6,6 +6,7 @@ import {ref, watch} from "vue";
 import SettingPanel from "@/components/SettingPanel.vue";
 import {useConfigStore} from "@/stores/configStore.ts";
 import {storeToRefs} from "pinia";
+import TimeNow from "@/components/TimeNow.vue";
 
 const configStore = useConfigStore()
 const {
@@ -14,7 +15,8 @@ const {
   showBackgroundImage,
   backgroundImageUrl,
   fontFamily,
-  showTopSites
+  showTopSites,
+  showTime
 } = storeToRefs(configStore)
 
 const settingVisible = ref(false)
@@ -45,6 +47,7 @@ setFontFamily(fontFamily.value)
       </el-header>
       <el-main>
         <div class="search-container">
+          <time-now v-if="showTime"/>
           <search-bar v-if="showSearch" @focusin="isBlurred = true" @focusout="isBlurred = false"/>
           <most-visited v-if="showTopSites"/>
         </div>
@@ -112,7 +115,7 @@ setFontFamily(fontFamily.value)
 
 @media (max-height: 650px) {
   .search-container {
-    place-items: start;
+    align-content: start;
   }
 }
 

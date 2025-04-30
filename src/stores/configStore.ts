@@ -20,6 +20,7 @@ export const useConfigStore = defineStore('config', {
         fontFamily: 'initial',
         showTopSites: true,
         theme: 'auto',
+        showTime: true,
     })
 })
 

@@ -116,7 +116,7 @@ if (isChromeTopSitesAvailable()) {
   color: inherit;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 690px) {
   .most-visited {
     gap: 10px;
   }

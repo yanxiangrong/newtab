@@ -118,6 +118,9 @@ onMounted(() => {
         <el-radio-button label="dark">深色</el-radio-button>
       </el-radio-group>
     </el-form-item>
+    <el-form-item label="显示时间">
+      <el-switch v-model="config.showTime.value"/>
+    </el-form-item>
   </el-form>
 </template>
 
