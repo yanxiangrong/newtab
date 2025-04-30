@@ -105,6 +105,9 @@ onMounted(() => {
       <el-button @click="triggerImport">导入书签</el-button>
       <input ref="bookmarkInput" type="file" accept=".html" @change="onImportBookmark" style="display: none"/>
     </el-form-item>
+    <el-form-item label="显示热门网站">
+      <el-switch v-model="config.showTopSites.value"/>
+    </el-form-item>
   </el-form>
 </template>
 

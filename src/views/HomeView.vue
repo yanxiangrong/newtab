@@ -8,7 +8,7 @@ import {useConfigStore} from "@/stores/configStore.ts";
 import {storeToRefs} from "pinia";
 
 const configStore = useConfigStore()
-const {showBookmark, showSearch, showBackgroundImage, backgroundImageUrl, fontFamily} = storeToRefs(configStore)
+const {showBookmark, showSearch, showBackgroundImage, backgroundImageUrl, fontFamily, showTopSites} = storeToRefs(configStore)
 
 const settingVisible = ref(false)
 
@@ -38,7 +38,7 @@ setFontFamily(fontFamily.value)
       <el-main>
         <div class="search-container">
           <search-bar v-if="showSearch" @focusin="isBlurred = true" @focusout="isBlurred = false"/>
-          <most-visited/>
+          <most-visited v-if="showTopSites"/>
         </div>
       </el-main>
       <el-footer>
