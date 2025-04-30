@@ -3,7 +3,7 @@ import {ref, watch} from 'vue'
 import {Search, Star, Link} from "@element-plus/icons-vue";
 import {useConfigStore} from "@/stores/configStore.ts";
 import {storeToRefs} from "pinia";
-import {faviconURL} from "@/utils/utils.ts";
+import {faviconURL, isChromeBookmarkAvailable, isChromeHistoryAvailable} from "@/utils/utils.ts";
 import {fetchSearchSuggestions} from "@/utils/baiduSuggestion.ts";
 
 const configStore = useConfigStore()
@@ -71,12 +71,12 @@ const getSearchHistory = async () => {
 }
 
 (async () => {
-  if (!chrome || !chrome.history) {
+  if (isChromeHistoryAvailable()) {
+    searchHistory.value = await getSearchHistory()
+  } else {
     searchHistory.value = JSON.parse(localStorage.getItem("searchHistory") || "[]")
     watch(searchHistory, () => localStorage.setItem("searchHistory", JSON.stringify(searchHistory.value)))
-    return
   }
-  searchHistory.value = await getSearchHistory()
 })()
 
 const input = ref('')
@@ -109,7 +109,7 @@ const querySearch = (query: string, cb: (suggestions: Record<string, any>[]) => 
       }));
     } else {
       // 书签
-      if (chrome && chrome.bookmarks) {
+      if (isChromeBookmarkAvailable()) {
         const bookmarks = await chrome.bookmarks.search(query);
         suggestions.push(...bookmarks.filter(item => item.url).slice(0, suggestionNum - suggestions.length).map(item => {
           return <SuggestionItem>{value: item.title || '', link: item.url || null, type: 'bookmark'};

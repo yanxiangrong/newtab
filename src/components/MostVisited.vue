@@ -1,10 +1,10 @@
 <script setup lang="ts">
 
-import {faviconURL} from "@/utils/utils.ts";
+import {faviconURL, isChromeTopSitesAvailable} from "@/utils/utils.ts";
 
 const mostVisited = ref<chrome.topSites.MostVisitedURL[]>([])
 
-if (chrome && chrome.topSites) {
+if (isChromeTopSitesAvailable()) {
   chrome.topSites.get((sites) => {
     if (!sites) {
       return

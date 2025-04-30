@@ -1,7 +1,7 @@
 export const faviconURL = (u: string, size: number = 16) => {
     const parsedUrl = new URL(u);
     let faviconUrl: URL
-    if (chrome.runtime && chrome.runtime.getURL) {
+    if (isChromeExtension() && chrome.runtime.getURL) {
         faviconUrl = new URL(chrome.runtime.getURL("/_favicon/"));
         faviconUrl.searchParams.set("pageUrl", `${parsedUrl.protocol}//${parsedUrl.host}${parsedUrl.pathname}`);
         faviconUrl.searchParams.set("size", size.toString());
@@ -23,4 +23,12 @@ export function isChromeBookmarkAvailable(): boolean {
 
 export function isChromeStorageAvailable(): boolean {
     return typeof chrome !== 'undefined' && !!chrome.storage
+}
+
+export function isChromeHistoryAvailable(): boolean {
+    return typeof chrome !== 'undefined' && !!chrome.history
+}
+
+export function isChromeTopSitesAvailable(): boolean {
+    return typeof chrome !== 'undefined' && !!chrome.topSites
 }
