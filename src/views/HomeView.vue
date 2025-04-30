@@ -21,10 +21,23 @@ const {
 
 const settingVisible = ref(false)
 
-const backgroundImgLoaded = ref(false)
-const imgKey = ref(0)
+const backgroundImage1Url = ref(backgroundImageUrl.value)
+const backgroundImage2Url = ref()
+
+const backgroundImg1Show = ref(false)
+const backgroundImg2Show = ref(false)
 
 const isBlurred = ref(false)
+
+const onBackgroundImg1Loaded = () => {
+  backgroundImg1Show.value = true
+  backgroundImg2Show.value = false
+}
+
+const onBackgroundImg2Loaded = () => {
+  backgroundImg1Show.value = false
+  backgroundImg2Show.value = true
+}
 
 const setFontFamily = (fontFamily: string) => {
   document.body.style.fontFamily = fontFamily
@@ -34,13 +47,30 @@ watch(fontFamily, (newFontFamily) => {
   setFontFamily(newFontFamily)
 })
 setFontFamily(fontFamily.value)
+
+const refreshBackgroundImage = () => {
+  if (!backgroundImageUrl.value) {
+    backgroundImg1Show.value = false
+    backgroundImg2Show.value = false
+    return
+  }
+  if (backgroundImg1Show.value) {
+    backgroundImage2Url.value = backgroundImageUrl.value + '?t=' + new Date().getTime()
+  } else {
+    backgroundImage1Url.value = backgroundImageUrl.value + '?t=' + new Date().getTime()
+  }
+}
 </script>
 
 <template>
   <div class="background">
-    <img :key="imgKey" v-if="showBackgroundImage" class="background-img"
-         :class="{loaded: backgroundImgLoaded, blurred: isBlurred}"
-         :src="backgroundImageUrl" @load="backgroundImgLoaded = true" alt=""/>
+    <div v-if="showBackgroundImage" class="background-img-container"
+         :class="{blurred: isBlurred}">
+      <img class="background-img" :class="{show: backgroundImg1Show}"
+           :src="backgroundImage1Url" @load="onBackgroundImg1Loaded" alt=""/>
+      <img class="background-img" :class="{show: backgroundImg2Show}"
+           :src="backgroundImage2Url" @load="onBackgroundImg2Loaded" alt=""/>
+    </div>
     <el-container class="container">
       <el-header style="padding: 0">
         <bookmarks-bar v-if="showBookmark"/>
@@ -54,7 +84,7 @@ setFontFamily(fontFamily.value)
       </el-main>
       <el-footer>
         <div class="options">
-          <el-button circle :icon="Refresh" @click="imgKey+=1"/>
+          <el-button circle :icon="Refresh" @click="refreshBackgroundImage"/>
           <el-button circle :icon="Setting" @click="settingVisible=true"/>
         </div>
       </el-footer>
@@ -71,9 +101,18 @@ setFontFamily(fontFamily.value)
 
 <style scoped>
 .background {
-  background-color: var(--el-bg-color);
+  background-color: var(--el-fill-color);
   width: 100%;
   height: 100vh;
+}
+
+.background-img-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  transition: opacity 0.3s ease-in-out, filter 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
 .background-img {
@@ -81,20 +120,21 @@ setFontFamily(fontFamily.value)
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   object-fit: cover;
   object-position: center;
   opacity: 0;
-  transition: opacity 0.3s ease-in-out, filter 0.3s ease-in-out, transform 0.3s ease-in-out;
+  transition: opacity 0.3s ease-in-out;
 }
+
+.background-img.show {
+  opacity: 1;
+}
+
 
 .blurred {
   filter: blur(16px);
   transform: scale(1.08);
-}
-
-.background-img.loaded {
-  opacity: 1;
 }
 
 .container {
