@@ -20,5 +20,6 @@ export const useConfigStore = defineStore('config', {
         fontFamily: 'initial',
         bookmarks: [] as Array<BookmarkNode>,
         showTopSites: true,
+        theme: 'auto',
     })
 })

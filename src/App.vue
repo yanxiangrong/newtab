@@ -1,14 +1,25 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-import { useDark, useToggle } from '@vueuse/core'
+import {RouterView} from 'vue-router'
+import {useDark, usePreferredDark} from "@vueuse/core";
+import {watch} from "vue";
+import {useConfigStore} from "@/stores/configStore.ts";
+import {storeToRefs} from "pinia";
 
-const isDark = useDark()
-const toggleDark = useToggle(isDark)
+const preferredDark = usePreferredDark()
+const toggleDark = useDark()
+
+const configStore = useConfigStore()
+const {theme} = storeToRefs(configStore)
+watch(theme, (newTheme) => {
+  if (newTheme === 'auto') {
+    toggleDark.value = preferredDark.value
+  } else toggleDark.value = newTheme === 'dark';
+})
+
 </script>
 
 <template>
-  <RouterView />
+  <RouterView/>
 </template>
 
 <style>

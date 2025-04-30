@@ -109,6 +109,13 @@ onMounted(() => {
     <el-form-item label="显示热门网站">
       <el-switch v-model="config.showTopSites.value"/>
     </el-form-item>
+    <el-form-item label="主题">
+      <el-radio-group v-model="config.theme.value">
+        <el-radio-button label="light">浅色</el-radio-button>
+        <el-radio-button label="auto">跟随系统</el-radio-button>
+        <el-radio-button label="dark">深色</el-radio-button>
+      </el-radio-group>
+    </el-form-item>
   </el-form>
 </template>
 
