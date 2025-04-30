@@ -5,13 +5,23 @@ import {useNow, useDateFormat } from "@vueuse/core";
 const now = useNow() // 响应式 Date
 // const formatted = useDateFormat(now, 'HH:mm:ss')
 const formatted = useDateFormat(now, 'HH:mm')
+const dateFormated = useDateFormat(now, 'M月d日 dddd', { locales: 'zh-CN' })
 </script>
 
 <template>
-  <div id="current-time">{{ formatted }}</div>
+  <div class="time-warp">
+    <time id="current-time">{{ formatted }}</time>
+    <span class="date">{{ dateFormated }}</span>
+  </div>
 </template>
 
 <style scoped>
+.time-warp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--el-text-color-primary);
+}
 #current-time {
   font-size: clamp(2rem, 10vh, 8rem);
   color: var(--el-text-color-primary);
