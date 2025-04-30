@@ -16,3 +16,7 @@ export const faviconURL = (u: string, size: number = 16) => {
 export function isChromeExtension(): boolean {
     return typeof chrome !== 'undefined' && !!chrome.runtime?.id
 }
+
+export function isChromeBookmarkAvailable(): boolean {
+    return typeof chrome !== 'undefined' && !!chrome.bookmarks
+}

@@ -5,6 +5,7 @@ import {storeToRefs} from "pinia";
 import {ref, watch, onMounted} from 'vue'
 import {ElMessage} from "element-plus";
 import {type BookmarkNode, countBookmarks, genBookmarkHtml, parseBookmarksHtml} from "@/utils/bookmarkParser.ts";
+import {isChromeBookmarkAvailable} from "@/utils/utils.ts";
 
 const configStore = useConfigStore()
 const config = storeToRefs(configStore)
@@ -64,6 +65,11 @@ onMounted(() => {
     <el-form-item label="显示书签栏">
       <el-switch v-model="config.showBookmark.value"/>
     </el-form-item>
+    <el-form-item label="书签管理" v-if="config.showBookmark.value && !isChromeBookmarkAvailable()">
+      <el-button @click="onExportBookmark">导出书签</el-button>
+      <el-button @click="triggerImport">导入书签</el-button>
+      <input ref="bookmarkInput" type="file" accept=".html" @change="onImportBookmark" style="display: none"/>
+    </el-form-item>
     <el-form-item label="显示搜索栏">
       <el-switch v-model="config.showSearch.value"/>
     </el-form-item>
@@ -100,11 +106,6 @@ onMounted(() => {
         敏捷的棕色狐狸跳过了懒狗。你好，World！@Vue字体测试
       </div>
     </el-card>
-    <el-form-item label="书签管理">
-      <el-button @click="onExportBookmark">导出书签</el-button>
-      <el-button @click="triggerImport">导入书签</el-button>
-      <input ref="bookmarkInput" type="file" accept=".html" @change="onImportBookmark" style="display: none"/>
-    </el-form-item>
     <el-form-item label="显示热门网站">
       <el-switch v-model="config.showTopSites.value"/>
     </el-form-item>

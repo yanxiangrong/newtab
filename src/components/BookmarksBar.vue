@@ -3,13 +3,14 @@ import {ref} from "vue";
 import BookmarksTree from "@/components/BookmarksTree.vue";
 import {useConfigStore} from "@/stores/configStore.ts";
 import {bookmarkNodeToChromeTree} from "@/utils/bookmarkParser.ts";
+import {isChromeBookmarkAvailable} from "@/utils/utils.ts";
 
 const configStore = useConfigStore()
 
 const bookmarks = ref<chrome.bookmarks.BookmarkTreeNode[]>();
 const otherBookmarks = ref<chrome.bookmarks.BookmarkTreeNode[]>();
 
-if (chrome && chrome.bookmarks) {
+if (isChromeBookmarkAvailable()) {
   chrome.bookmarks.getTree((tree) => {
     if (!tree || !tree[0].children) {
       return
