@@ -17,6 +17,7 @@ const autoComplete = ref()
 const searchHistoryNum = 1000
 const searchHistory = ref<string[]>([])
 
+const isFocused = ref(false)
 
 const getSearchHistory = async () => {
   const paramsKeys = ['wd', 'q', 'query', 'search', 's']
@@ -104,21 +105,21 @@ const querySearch = (query: string, cb: (suggestions: Record<string, any>[]) => 
 
     if (!query) {
       suggestions.push(...searchHistory.value.slice(0, suggestionNum).map(item => {
-        return <SuggestionItem>{ value: item, link: null, type: 'search' };
+        return <SuggestionItem>{value: item, link: null, type: 'search'};
       }));
     } else {
       // 书签
       if (chrome && chrome.bookmarks) {
         const bookmarks = await chrome.bookmarks.search(query);
         suggestions.push(...bookmarks.filter(item => item.url).slice(0, suggestionNum - suggestions.length).map(item => {
-          return <SuggestionItem>{ value: item.title || '', link: item.url || null, type: 'bookmark' };
+          return <SuggestionItem>{value: item.title || '', link: item.url || null, type: 'bookmark'};
         }));
       }
 
       // 搜索历史
       if (suggestions.length < suggestionNum) {
         suggestions.push(...searchHistory.value.filter(q => q.includes(query)).slice(0, suggestionNum - suggestions.length).map(item => {
-          return <SuggestionItem>{ value: item, link: null, type: 'search' };
+          return <SuggestionItem>{value: item, link: null, type: 'search'};
         }));
       }
 
@@ -130,7 +131,7 @@ const querySearch = (query: string, cb: (suggestions: Record<string, any>[]) => 
           startTime: 14 * 24 * 60 * 60 * 1000
         });
         suggestions.push(...historyItems.map(item => {
-          return <SuggestionItem>{ value: item.title || '', link: item.url || null, type: 'history' };
+          return <SuggestionItem>{value: item.title || '', link: item.url || null, type: 'history'};
         }));
       }
 
@@ -139,7 +140,7 @@ const querySearch = (query: string, cb: (suggestions: Record<string, any>[]) => 
         try {
           const searchSuggestions = await fetchSearchSuggestions(query);
           suggestions.push(...searchSuggestions.slice(0, suggestionNum - suggestions.length).map(item => {
-            return <SuggestionItem>{ value: item, link: null, type: 'search' };
+            return <SuggestionItem>{value: item, link: null, type: 'search'};
           }));
         } catch (e) {
         }
@@ -164,7 +165,8 @@ const handleSuggestionSelect = (item: Record<string, any>) => {
   <el-autocomplete ref="autoComplete" style="max-width: 750px" v-model="input" autofocus size="large"
                    @keydown.enter="openSearch(input)"
                    :fetch-suggestions="querySearch" @select="handleSuggestionSelect" class="search-input"
-                   fit-input-width>
+                   :class="{'is-focus': isFocused}"
+                   fit-input-width @focusin="isFocused = true" @focusout="isFocused = false">
     <template #prepend>
       <el-select style="width: 115px" v-model="searchEngine" size="large">
         <el-option v-for="engine in searchEngines" :key="engine.label" :label="engine.label"
@@ -237,9 +239,13 @@ const handleSuggestionSelect = (item: Record<string, any>) => {
 }
 
 .search-input .el-input {
-  background-color: color-mix(in srgb, var(--el-bg-color), transparent 50%);
+  background-color: color-mix(in srgb, var(--el-fill-color-extra-light), transparent 50%);
   backdrop-filter: blur(8px);
   border-radius: var(--el-border-radius-base);
+}
+
+.search-input.is-focus .el-input {
+  background-color: color-mix(in srgb, var(--el-fill-color-extra-light), transparent 0%);
 }
 
 .search-input input {

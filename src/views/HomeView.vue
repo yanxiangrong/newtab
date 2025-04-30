@@ -38,6 +38,7 @@ setFontFamily(fontFamily.value)
       <el-main>
         <div class="search-container">
           <search-bar v-if="showSearch" @focusin="isBlurred = true" @focusout="isBlurred = false"/>
+          <most-visited/>
         </div>
       </el-main>
       <el-footer>
@@ -97,6 +98,8 @@ setFontFamily(fontFamily.value)
   display: grid;
   place-items: center;
   height: 100%;
+  align-content: center;
+  gap: 2rem;
 }
 
 @media (max-height: 650px) {

@@ -9,7 +9,7 @@ const configStore = useConfigStore()
 const bookmarks = ref<chrome.bookmarks.BookmarkTreeNode[]>();
 const otherBookmarks = ref<chrome.bookmarks.BookmarkTreeNode[]>();
 
-if (chrome.bookmarks) {
+if (chrome && chrome.bookmarks) {
   chrome.bookmarks.getTree((tree) => {
     if (!tree || !tree[0].children) {
       return
