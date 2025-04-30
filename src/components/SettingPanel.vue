@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import {useConfigStore} from "@/stores/configStore.ts";
+import {useConfigStore, useLocalConfigStore} from "@/stores/configStore.ts";
 import {storeToRefs} from "pinia";
 import {ref, watch, onMounted} from 'vue'
 import {ElMessage} from "element-plus";
@@ -9,6 +9,8 @@ import {isChromeBookmarkAvailable} from "@/utils/utils.ts";
 
 const configStore = useConfigStore()
 const config = storeToRefs(configStore)
+
+const localConfigStore = useLocalConfigStore()
 
 const fontTest = ref<HTMLElement>()
 watch(config.fontFamily, (newFontFamily) => {
@@ -31,14 +33,14 @@ function onImportBookmark(e: Event) {
     const htmlString = evt.target?.result as string
     const tree: BookmarkNode[] = parseBookmarksHtml(htmlString)
 
-    configStore.bookmarks = tree
+    localConfigStore.bookmarks = tree
     ElMessage.success('已导入书签' + countBookmarks(tree) + '条')
   }
   reader.readAsText(file)
 }
 
 function onExportBookmark() {
-  const bookmarks = configStore.bookmarks // 需替换为真实数据源
+  const bookmarks = localConfigStore.bookmarks // 需替换为真实数据源
   // 生成标准Bookmark html
   const html = genBookmarkHtml(bookmarks)
   const blob = new Blob([html], {type: "text/html"})

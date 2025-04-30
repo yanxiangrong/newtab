@@ -20,3 +20,7 @@ export function isChromeExtension(): boolean {
 export function isChromeBookmarkAvailable(): boolean {
     return typeof chrome !== 'undefined' && !!chrome.bookmarks
 }
+
+export function isChromeStorageAvailable(): boolean {
+    return typeof chrome !== 'undefined' && !!chrome.storage
+}

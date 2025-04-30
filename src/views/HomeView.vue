@@ -8,7 +8,14 @@ import {useConfigStore} from "@/stores/configStore.ts";
 import {storeToRefs} from "pinia";
 
 const configStore = useConfigStore()
-const {showBookmark, showSearch, showBackgroundImage, backgroundImageUrl, fontFamily, showTopSites} = storeToRefs(configStore)
+const {
+  showBookmark,
+  showSearch,
+  showBackgroundImage,
+  backgroundImageUrl,
+  fontFamily,
+  showTopSites
+} = storeToRefs(configStore)
 
 const settingVisible = ref(false)
 
@@ -29,7 +36,8 @@ setFontFamily(fontFamily.value)
 
 <template>
   <div class="background">
-    <img :key="imgKey" v-if="showBackgroundImage" class="background-img" :class="{loaded: backgroundImgLoaded, blurred: isBlurred}"
+    <img :key="imgKey" v-if="showBackgroundImage" class="background-img"
+         :class="{loaded: backgroundImgLoaded, blurred: isBlurred}"
          :src="backgroundImageUrl" @load="backgroundImgLoaded = true" alt=""/>
     <el-container class="container">
       <el-header style="padding: 0">

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import {ref} from "vue";
 import BookmarksTree from "@/components/BookmarksTree.vue";
-import {useConfigStore} from "@/stores/configStore.ts";
+import {useLocalConfigStore} from "@/stores/configStore.ts";
 import {bookmarkNodeToChromeTree} from "@/utils/bookmarkParser.ts";
 import {isChromeBookmarkAvailable} from "@/utils/utils.ts";
 
-const configStore = useConfigStore()
+const localConfigStore = useLocalConfigStore()
 
 const bookmarks = ref<chrome.bookmarks.BookmarkTreeNode[]>();
 const otherBookmarks = ref<chrome.bookmarks.BookmarkTreeNode[]>();
@@ -34,16 +34,20 @@ if (isChromeBookmarkAvailable()) {
     console.log('chrome.bookmarks:', bookmarks.value)
   })
 } else {
-  const tree = bookmarkNodeToChromeTree(configStore.bookmarks)
-  bookmarks.value = tree[0].children
-  otherBookmarks.value = [
-    {
-      id: '',
-      title: '所有书签',
-      syncing: false,
-      children: tree.slice(1)
-    }
-  ]
+  const tree = bookmarkNodeToChromeTree(localConfigStore.bookmarks)
+  if (tree && tree.length > 0) {
+    bookmarks.value = tree[0].children
+  }
+  if (tree && tree.length > 1) {
+    otherBookmarks.value = [
+      {
+        id: '',
+        title: '所有书签',
+        syncing: false,
+        children: tree.slice(1)
+      }
+    ]
+  }
   console.log('chrome.bookmarks is not available')
 }
 

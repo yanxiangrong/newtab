@@ -1,17 +1,22 @@
 import type {PiniaPluginContext} from 'pinia'
+import {isChromeStorageAvailable} from "@/utils/utils.ts";
 
 export const piniaPersist = (context: PiniaPluginContext) => {
-    if (chrome.storage) {
-        chrome.storage.sync.get(context.store.$id).then((data) => {
-            console.log('chrome.storage.sync.get', data)
+    if (isChromeStorageAvailable()) {
+        let storage: chrome.storage.StorageArea = chrome.storage.local
+        if (context.store.$id === 'config') {
+            storage = chrome.storage.sync
+        }
+        storage.get(context.store.$id).then((data) => {
+            console.log('storage.get', data)
             if (data[context.store.$id]) {
                 context.store.$patch(JSON.parse(data[context.store.$id]))
             }
         })
 
         context.store.$subscribe((mutation, state) => {
-            console.log('chrome.storage.sync.set',  mutation, state)
-            chrome.storage.sync.set({[context.store.$id]: JSON.stringify(state)}).then(() => {
+            console.log('storage.set', mutation, state)
+            storage.set({[context.store.$id]: JSON.stringify(state)}).then(() => {
             })
         })
     } else {
@@ -24,5 +29,6 @@ export const piniaPersist = (context: PiniaPluginContext) => {
             console.log('localStorage.set', mutation, state)
             localStorage.setItem(context.store.$id, JSON.stringify(state))
         })
+        console.log('chrome.storage not available, using localStorage')
     }
 }

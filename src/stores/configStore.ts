@@ -18,8 +18,13 @@ export const useConfigStore = defineStore('config', {
         ],
         suggestionCount: 25,
         fontFamily: 'initial',
-        bookmarks: [] as Array<BookmarkNode>,
         showTopSites: true,
         theme: 'auto',
     })
+})
+
+export const useLocalConfigStore = defineStore('localConfig', {
+    state: () => ({
+        bookmarks: [] as Array<BookmarkNode>,
+    }),
 })
