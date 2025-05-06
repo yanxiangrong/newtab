@@ -47,7 +47,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="hitokoto-box">
-    <p class="hitokoto-content">
+    <p class="hitokoto-content" v-if="hitokoto">
       <a :href="hitokotoHref" target="_blank" rel="noopener" v-if="hitokotoHref">『&emsp;{{ hitokoto }}&emsp;』</a>
       <span v-else>『&emsp;{{ hitokoto }}&emsp;』</span>
     </p>
