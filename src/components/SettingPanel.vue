@@ -6,6 +6,7 @@ import {ref, watch, onMounted} from 'vue'
 import {ElMessage} from "element-plus";
 import {type BookmarkNode, countBookmarks, genBookmarkHtml, parseBookmarksHtml} from "@/utils/bookmarkParser.ts";
 import {isChromeBookmarkAvailable} from "@/utils/utils.ts";
+import {hitokotoTypeMap} from "@/utils/hitokoto.ts";
 
 const configStore = useConfigStore()
 const config = storeToRefs(configStore)
@@ -121,9 +122,27 @@ onMounted(() => {
     <el-form-item label="显示时间">
       <el-switch v-model="config.showTime.value"/>
     </el-form-item>
+    <el-form-item label="显示一言">
+      <el-switch v-model="config.showHitokoto.value"/>
+    </el-form-item>
+    <el-form-item label="一言类型" v-if="config.showHitokoto.value">
+      <el-checkbox-group id="hitokotoClass" v-model="config.hitokotoClass.value">
+        <el-checkbox v-for="[key, label] in hitokotoTypeMap" :key="key" :label="label" :value="key"/>
+      </el-checkbox-group>
+    </el-form-item>
   </el-form>
 </template>
 
 <style scoped>
 
+</style>
+
+<style>
+#hitokotoClass .el-checkbox {
+  margin-right: 8px;
+}
+
+#hitokotoClass .el-checkbox__label {
+  padding-left: 4px;
+}
 </style>

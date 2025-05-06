@@ -21,6 +21,8 @@ export const useConfigStore = defineStore('config', {
         showTopSites: true,
         theme: 'auto',
         showTime: true,
+        showHitokoto: true,
+        hitokotoClass: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l'],
     })
 })
 

@@ -16,7 +16,8 @@ const {
   backgroundImageUrl,
   fontFamily,
   showTopSites,
-  showTime
+  showTime,
+  showHitokoto,
 } = storeToRefs(configStore)
 
 const settingVisible = ref(false)
@@ -82,7 +83,10 @@ const refreshBackgroundImage = () => {
           <most-visited v-if="showTopSites"/>
         </div>
       </el-main>
-      <el-footer>
+      <el-footer class="footer-bar">
+        <div class="hitokoto-container" v-if="showHitokoto">
+          <hitokoto class="hitokoto" v-if="showHitokoto"/>
+        </div>
         <div class="options">
           <el-button circle :icon="Refresh" @click="refreshBackgroundImage"/>
           <el-button circle :icon="Setting" @click="settingVisible=true"/>
@@ -157,6 +161,26 @@ const refreshBackgroundImage = () => {
   .search-container {
     align-content: start;
   }
+}
+
+.footer-bar {
+  position: relative; /* 用于绝对定位 options */
+}
+
+.hitokoto-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding:0 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.hitokoto {
+  flex: 1;
+  min-width: 0;
 }
 
 .options {
