@@ -60,9 +60,7 @@ const refreshBackgroundImage = () => {
   }
 }
 
-watch(backgroundImageUrl, () => {
-  refreshBackgroundImage()
-}, {immediate: true})
+watch(backgroundImageUrl, refreshBackgroundImage, {immediate: true})
 
 </script>
 

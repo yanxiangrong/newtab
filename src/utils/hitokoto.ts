@@ -60,7 +60,7 @@ export async function getHitokoto(types: string[] = []): Promise<Hitokoto> {
     if (!response.ok) {
         const hitokoto = getHitokotoFromHistoryRand(types);
         if (hitokoto) {
-            console.warn('Hitokoto API request failed, using cached hitokoto:', hitokoto);
+            console.warn('Hitokoto API request failed, using cached hitokoto');
             return hitokoto;
         }
         console.error('Hitokoto API request failed, no cached hitokoto available');

@@ -60,7 +60,7 @@ onBeforeUnmount(() => {
 .hitokoto-box {
   max-width: 750px;
   text-align: center;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 0 4px 16px rgba(0, 0, 0, 0.3);
   position: relative;
 }
 
