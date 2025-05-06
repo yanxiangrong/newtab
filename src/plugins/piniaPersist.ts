@@ -1,7 +1,7 @@
 import type {PiniaPluginContext} from 'pinia'
 import {isChromeStorageAvailable} from "@/utils/utils.ts";
 
-export const piniaPersist = (context: PiniaPluginContext) => {
+export const piniaPersist = async (context: PiniaPluginContext) => {
     if (isChromeStorageAvailable()) {
         let storage: chrome.storage.StorageArea = chrome.storage.local
         if (context.store.$id === 'config') {
