@@ -14,7 +14,7 @@ watch(theme, (newTheme) => {
   if (newTheme === 'auto') {
     toggleDark.value = preferredDark.value
   } else toggleDark.value = newTheme === 'dark';
-})
+}, {immediate: true})
 
 </script>
 

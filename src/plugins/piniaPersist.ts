@@ -7,12 +7,12 @@ export const piniaPersist = (context: PiniaPluginContext) => {
         if (context.store.$id === 'config') {
             storage = chrome.storage.sync
         }
-        storage.get(context.store.$id).then((data) => {
-            console.log('storage.get', data)
-            if (data[context.store.$id]) {
-                context.store.$patch(JSON.parse(data[context.store.$id]))
-            }
-        })
+
+        const data = await storage.get(context.store.$id)
+        console.log('storage.get', data)
+        if (data[context.store.$id]) {
+            context.store.$patch(JSON.parse(data[context.store.$id]))
+        }
 
         context.store.$subscribe((mutation, state) => {
             console.log('storage.set', mutation, state)

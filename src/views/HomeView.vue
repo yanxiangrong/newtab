@@ -22,8 +22,8 @@ const {
 
 const settingVisible = ref(false)
 
-const backgroundImage1Url = ref(backgroundImageUrl.value)
-const backgroundImage2Url = ref()
+const backgroundImage1Url = ref('')
+const backgroundImage2Url = ref('')
 
 const backgroundImg1Show = ref(false)
 const backgroundImg2Show = ref(false)
@@ -40,14 +40,12 @@ const onBackgroundImg2Loaded = () => {
   backgroundImg2Show.value = true
 }
 
-const setFontFamily = (fontFamily: string) => {
-  document.body.style.fontFamily = fontFamily
-}
 
-watch(fontFamily, (newFontFamily) => {
-  setFontFamily(newFontFamily)
-})
-setFontFamily(fontFamily.value)
+watch(fontFamily, (newFontFamily: string) => {
+  if (newFontFamily) {
+    document.body.style.fontFamily = newFontFamily
+  }
+}, {immediate: true})
 
 const refreshBackgroundImage = () => {
   if (!backgroundImageUrl.value) {
@@ -61,6 +59,11 @@ const refreshBackgroundImage = () => {
     backgroundImage1Url.value = backgroundImageUrl.value + '?t=' + new Date().getTime()
   }
 }
+
+watch(backgroundImageUrl, () => {
+  refreshBackgroundImage()
+}, {immediate: true})
+
 </script>
 
 <template>
@@ -173,7 +176,7 @@ const refreshBackgroundImage = () => {
   left: 0;
   width: 100%;
   height: 100%;
-  padding:0 20px;
+  padding: 0 20px;
   display: flex;
   justify-content: center;
 }

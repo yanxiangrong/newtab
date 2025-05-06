@@ -2,7 +2,7 @@
 
 import {useConfigStore, useLocalConfigStore} from "@/stores/configStore.ts";
 import {storeToRefs} from "pinia";
-import {ref, watch, onMounted} from 'vue'
+import {onMounted, ref, watch} from 'vue'
 import {ElMessage} from "element-plus";
 import {type BookmarkNode, countBookmarks, genBookmarkHtml, parseBookmarksHtml} from "@/utils/bookmarkParser.ts";
 import {isChromeBookmarkAvailable} from "@/utils/utils.ts";
@@ -61,6 +61,16 @@ onMounted(() => {
   fontTest.value.style.fontFamily = config.fontFamily.value
 })
 
+const backgroundImageUrlInput = ref(config.backgroundImageUrl.value)
+const onBackgroundImageUrlChange = (value: string) => {
+  config.backgroundImageUrl.value = value
+}
+
+const fontFamilyInput = ref(config.fontFamily.value)
+const onFontFamilyChange = (value: string) => {
+  config.fontFamily.value = value
+}
+
 </script>
 
 <template>
@@ -98,11 +108,11 @@ onMounted(() => {
     </el-form-item>
     <template v-if="config.showBackgroundImage.value">
       <el-form-item label="背景图片地址">
-        <el-input v-model="config.backgroundImageUrl.value"/>
+        <el-input v-model="backgroundImageUrlInput" @change="onBackgroundImageUrlChange"/>
       </el-form-item>
     </template>
     <el-form-item label="字体">
-      <el-input v-model="config.fontFamily.value"/>
+      <el-input v-model="fontFamilyInput" @change="onFontFamilyChange"/>
     </el-form-item>
     <el-card shadow="never" style="margin-bottom: 18px">
       <div ref="fontTest">The quick brown fox jumps over the lazy dog. 1234567890<br/>
