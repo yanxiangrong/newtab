@@ -48,8 +48,8 @@ onBeforeUnmount(() => {
 <template>
   <div class="hitokoto-box">
     <p class="hitokoto-content">
-      <a :href="hitokotoHref" target="_blank" rel="noopener" v-if="hitokotoHref">『 {{ hitokoto }} 』</a>
-      <span v-else>『 {{ hitokoto }} 』</span>
+      <a :href="hitokotoHref" target="_blank" rel="noopener" v-if="hitokotoHref">『&emsp;{{ hitokoto }}&emsp;』</a>
+      <span v-else>『&emsp;{{ hitokoto }}&emsp;』</span>
     </p>
     <p class="hitokoto-from" v-if="hitokotoFrom">—— {{ hitokotoFrom }}</p>
     <el-button class="hitokoto-refresh" circle :icon="Refresh" @click="refreshHitokoto"/>
