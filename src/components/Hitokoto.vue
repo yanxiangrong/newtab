@@ -30,7 +30,9 @@ const refreshHitokoto = async () => {
   timer = setInterval(updateHitokoto, 60 * 1000);
 }
 
-updateHitokoto()
+onBeforeUnmount(() => {
+  updateHitokoto()
+})
 
 let timer: number | null = null;
 
