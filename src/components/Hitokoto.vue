@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {getHitokoto} from "@/utils/hitokoto.ts";
+import {getHitokoto} from "@/api/hitokoto.ts";
 import {Refresh} from "@element-plus/icons-vue";
 import {useConfigStore} from "@/stores/configStore.ts";
 import {storeToRefs} from "pinia";

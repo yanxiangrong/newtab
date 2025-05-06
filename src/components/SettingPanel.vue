@@ -6,7 +6,7 @@ import {onMounted, ref, watch} from 'vue'
 import {ElMessage} from "element-plus";
 import {type BookmarkNode, countBookmarks, genBookmarkHtml, parseBookmarksHtml} from "@/utils/bookmarkParser.ts";
 import {isChromeBookmarkAvailable} from "@/utils/utils.ts";
-import {hitokotoTypeMap} from "@/utils/hitokoto.ts";
+import {hitokotoTypeMap} from "@/api/hitokoto.ts";
 
 const configStore = useConfigStore()
 const config = storeToRefs(configStore)
@@ -139,6 +139,9 @@ const onFontFamilyChange = (value: string) => {
       <el-checkbox-group id="hitokotoClass" v-model="config.hitokotoClass.value">
         <el-checkbox v-for="[key, label] in hitokotoTypeMap" :key="key" :label="label" :value="key"/>
       </el-checkbox-group>
+    </el-form-item>
+    <el-form-item label="显示天气">
+      <el-switch v-model="config.showWeather.value"/>
     </el-form-item>
   </el-form>
 </template>

@@ -8,6 +8,8 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import {ElementPlusResolver} from 'unplugin-vue-components/resolvers'
+import svgLoader from 'vite-svg-loader';
+
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -43,6 +45,7 @@ export default defineConfig({
         Icons({
             autoInstall: true,
         }),
+        svgLoader(),
     ],
     resolve: {
         alias: {

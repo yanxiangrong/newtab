@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import {ref, watch} from 'vue'
-import {Search, Star, Link} from "@element-plus/icons-vue";
+import {Link, Search, Star} from "@element-plus/icons-vue";
 import {useConfigStore} from "@/stores/configStore.ts";
 import {storeToRefs} from "pinia";
 import {faviconURL, isChromeBookmarkAvailable, isChromeHistoryAvailable} from "@/utils/utils.ts";
-import {fetchSearchSuggestions} from "@/utils/baiduSuggestion.ts";
+import {fetchSearchSuggestions} from "@/api/baiduSuggestion.ts";
 
 const configStore = useConfigStore()
 const {searchEngine, searchEngines, suggestionCount} = storeToRefs(configStore)

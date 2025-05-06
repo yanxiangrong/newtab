@@ -49,6 +49,8 @@ declare module 'vue' {
     SettingPanel: typeof import('./components/SettingPanel.vue')['default']
     TheWelcome: typeof import('./components/TheWelcome.vue')['default']
     TimeNow: typeof import('./components/TimeNow.vue')['default']
+    Weather: typeof import('./components/Weather.vue')['default']
+    WeatherDetails: typeof import('./components/WeatherDetails.vue')['default']
     WelcomeItem: typeof import('./components/WelcomeItem.vue')['default']
   }
 }

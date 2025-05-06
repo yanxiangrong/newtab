@@ -6,6 +6,7 @@ import {bookmarkNodeToChromeTree} from "@/utils/bookmarkParser.ts";
 import {isChromeBookmarkAvailable} from "@/utils/utils.ts";
 
 const localConfigStore = useLocalConfigStore()
+const {bookmarks: localBookmarks} = storeToRefs(localConfigStore)
 
 const bookmarks = ref<chrome.bookmarks.BookmarkTreeNode[]>();
 const otherBookmarks = ref<chrome.bookmarks.BookmarkTreeNode[]>();
@@ -35,7 +36,7 @@ const updateBookmarks = () => {
       console.log('chrome.bookmarks:', bookmarks.value)
     })
   } else {
-    const tree = bookmarkNodeToChromeTree(localConfigStore.bookmarks)
+    const tree = bookmarkNodeToChromeTree(localBookmarks.value)
     if (tree && tree.length > 0) {
       bookmarks.value = tree[0].children
     }
@@ -53,7 +54,7 @@ const updateBookmarks = () => {
   }
 }
 
-watch(localConfigStore.bookmarks, updateBookmarks, {immediate: true})
+watch(localBookmarks, updateBookmarks, {immediate: true})
 
 </script>
 

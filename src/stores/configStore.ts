@@ -23,8 +23,10 @@ export const useConfigStore = defineStore('config', {
         showTime: true,
         showHitokoto: true,
         hitokotoClass: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l'],
+        showWeather: true
     })
 })
+
 
 export const useLocalConfigStore = defineStore('localConfig', {
     state: () => ({

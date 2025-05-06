@@ -7,6 +7,7 @@ import SettingPanel from "@/components/SettingPanel.vue";
 import {useConfigStore} from "@/stores/configStore.ts";
 import {storeToRefs} from "pinia";
 import TimeNow from "@/components/TimeNow.vue";
+import Weather from "@/components/Weather.vue";
 
 const configStore = useConfigStore()
 const {
@@ -18,6 +19,7 @@ const {
   showTopSites,
   showTime,
   showHitokoto,
+  showWeather
 } = storeToRefs(configStore)
 
 const settingVisible = ref(false)
@@ -77,7 +79,10 @@ watch(backgroundImageUrl, refreshBackgroundImage, {immediate: true})
       <el-header style="padding: 0">
         <bookmarks-bar v-if="showBookmark"/>
       </el-header>
-      <el-main>
+      <el-main class="main">
+        <div v-if="showWeather" class="weather-container">
+          <weather/>
+        </div>
         <div class="search-container">
           <time-now v-if="showTime"/>
           <search-bar v-if="showSearch" @focusin="isBlurred = true" @focusout="isBlurred = false"/>
@@ -189,5 +194,16 @@ watch(backgroundImageUrl, refreshBackgroundImage, {immediate: true})
   display: flex;
   justify-content: end;
   align-items: center;
+}
+
+.main {
+  position: relative;
+}
+
+.weather-container {
+  position: absolute;
+  top: 0;
+  left: 10px;
+  padding: 10px;
 }
 </style>
