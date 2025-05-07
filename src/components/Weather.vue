@@ -19,12 +19,13 @@ const updatePosition = async () => {
   if (!showWeather.value) {
     return
   }
-  if (navigator.geolocation && useBrowserLocation) {
+  if (navigator.geolocation && useBrowserLocation.value) {
     navigator.geolocation.getCurrentPosition((p) => {
       position.value = {
         lat: p.coords.latitude,
         lng: p.coords.longitude
       }
+      console.log('Current position (browser):', positionToString(position.value))
     }, (error) => {
       console.error('Error getting location:', error)
     })
@@ -35,17 +36,14 @@ const updatePosition = async () => {
         lat: p.content.point.y,
         lng: p.content.point.x
       }
+      console.log('Current position (Baidu):', positionToString(position.value))
     } catch (err) {
       console.error('Error getting location:', err)
     }
   }
-
-  if (position.value) {
-    console.log('Current position:', positionToString(position.value))
-  }
 }
 
-watch(showWeather, updatePosition, {immediate: true})
+watch([showWeather, useBrowserLocation], updatePosition, {immediate: true})
 
 const updateWeather = async () => {
   if (!showWeather.value || !position.value) {
