@@ -4,9 +4,10 @@ import {storeToRefs} from "pinia";
 import {fetchWeatherNowWithCache} from "@/api/weather.ts";
 import {type Position, positionToString} from "@/utils/position.ts";
 import {getWeatherIcon} from "@/utils/weatherIconMap.ts";
+import {getLocation} from "@/api/baiduLocation.ts";
 
 const configStore = useConfigStore()
-const {showWeather} = storeToRefs(configStore)
+const {showWeather, useBrowserLocation} = storeToRefs(configStore)
 
 const position = ref<Position | null>(null)
 
@@ -14,22 +15,33 @@ const weatherText = ref('')
 const temperature = ref('')
 const weatherIcon = ref('')
 
-const updatePosition = () => {
+const updatePosition = async () => {
   if (!showWeather.value) {
     return
   }
-  if (navigator.geolocation) {
+  if (navigator.geolocation && useBrowserLocation) {
     navigator.geolocation.getCurrentPosition((p) => {
       position.value = {
         lat: p.coords.latitude,
         lng: p.coords.longitude
       }
-      console.log('Current position:', positionToString(position.value))
     }, (error) => {
       console.error('Error getting location:', error)
     })
   } else {
-    console.error('Geolocation is not supported by this browser.')
+    try {
+      const p = await getLocation()
+      position.value = {
+        lat: p.content.point.y,
+        lng: p.content.point.x
+      }
+    } catch (err) {
+      console.error('Error getting location:', err)
+    }
+  }
+
+  if (position.value) {
+    console.log('Current position:', positionToString(position.value))
   }
 }
 
