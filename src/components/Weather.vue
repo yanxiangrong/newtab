@@ -10,6 +10,7 @@ const configStore = useConfigStore()
 const {showWeather, useBrowserLocation} = storeToRefs(configStore)
 
 const position = ref<Position | null>(null)
+const positionBrowser = ref<Position | null>(null)
 
 const weatherText = ref('')
 const temperature = ref('')
@@ -21,11 +22,11 @@ const updatePosition = async () => {
   }
   if (navigator.geolocation && useBrowserLocation.value) {
     navigator.geolocation.getCurrentPosition((p) => {
-      position.value = {
+      positionBrowser.value = {
         lat: p.coords.latitude,
         lng: p.coords.longitude
       }
-      console.log('Current position (browser):', positionToString(position.value))
+      console.log('Current position (browser):', positionToString(positionBrowser.value))
     }, (error) => {
       console.error('Error getting location:', error)
     })
@@ -43,7 +44,10 @@ const updatePosition = async () => {
   }
 }
 
-watch([showWeather, useBrowserLocation], updatePosition, {immediate: true})
+onMounted(() => {
+  watch([showWeather, useBrowserLocation], updatePosition, {immediate: true})
+})
+
 
 const updateWeather = async () => {
   if (!showWeather.value || !position.value) {
@@ -70,8 +74,8 @@ watch(position, updateWeather, {immediate: true})
           <SvgIcon :name="getWeatherIcon(Number(weatherIcon))" prefix="icon-weather"/>
         </div>
         <div class="weather-info">
-          <div class="temperature">{{ temperature }}<span class="degree">℃</span></div>
-          <div class="weather-text">{{ weatherText }}</div>
+          <div class="temperature">{{ temperature }}<span v-if="temperature" class="degree">℃</span></div>
+          <div class="weather-text">{{ weatherText || '获取中...' }}</div>
         </div>
       </div>
     </template>
