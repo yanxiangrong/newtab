@@ -90,7 +90,7 @@ const fetchWeatherDaily = async (location: string, days: 3 | 7 | 10 | 15 | 30 = 
 
 export const fetchWeatherDailyWithCache = async (location: string, days: 3 | 7 | 10 | 15 | 30 = 7) => {
     const cacheKey = `weather-daily-${location}-${days}`
-    return witchCache(() => fetchWeatherDaily(location, days), cacheKey, 1000 * 60 * 5)
+    return witchCache(() => fetchWeatherDaily(location, days), cacheKey, 1000 * 60 * 30)
 }
 
 const fetchWeatherHourly = async (location: string, hours: 24 | 72 | 168 = 24) => {
@@ -101,7 +101,7 @@ const fetchWeatherHourly = async (location: string, hours: 24 | 72 | 168 = 24) =
 
 export const fetchWeatherHourlyWithCache = async (location: string, hours: 24 | 72 | 168 = 24) => {
     const cacheKey = `weather-hourly-${location}-${hours}`
-    return witchCache(() => fetchWeatherHourly(location, hours), cacheKey, 1000 * 60 * 5)
+    return witchCache(() => fetchWeatherHourly(location, hours), cacheKey, 1000 * 60 * 30)
 }
 
 const fetchWeatherMinutely = async (location: string, minutes: 5 = 5) => {
@@ -112,7 +112,7 @@ const fetchWeatherMinutely = async (location: string, minutes: 5 = 5) => {
 
 export const fetchWeatherMinutelyWithCache = async (location: string, minutes: 5 = 5) => {
     const cacheKey = `weather-minutely-${location}-${minutes}`
-    return witchCache(() => fetchWeatherMinutely(location, minutes), cacheKey, 1000 * 60)
+    return witchCache(() => fetchWeatherMinutely(location, minutes), cacheKey, 1000 * 60 * 3)
 }
 
 const fetchCityLookup = async (location: string) => {
