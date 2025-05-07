@@ -10,7 +10,6 @@ const configStore = useConfigStore()
 const {showWeather, useBrowserLocation} = storeToRefs(configStore)
 
 const position = ref<Position | null>(null)
-const positionBrowser = ref<Position | null>(null)
 
 const weatherText = ref('')
 const temperature = ref('')
@@ -22,11 +21,11 @@ const updatePosition = async () => {
   }
   if (navigator.geolocation && useBrowserLocation.value) {
     navigator.geolocation.getCurrentPosition((p) => {
-      positionBrowser.value = {
+      position.value = {
         lat: p.coords.latitude,
         lng: p.coords.longitude
       }
-      console.log('Current position (browser):', positionToString(positionBrowser.value))
+      console.log('Current position (browser):', positionToString(position.value))
     }, (error) => {
       console.error('Error getting location:', error)
     })
