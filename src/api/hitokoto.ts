@@ -50,22 +50,37 @@ const getHitokotoFromHistoryRand = (types: string[] = []): Hitokoto | null => {
     return filteredHistory[randomIndex];
 }
 
+let stopRequestUntil = 0;
+const initRequestInterval = 1000 * 60 * 5;
+let requestInterval = initRequestInterval;
+
 export async function getHitokoto(types: string[] = []): Promise<Hitokoto> {
     const url = new URL('https://v1.hitokoto.cn')
     url.searchParams.set('encoding', 'json')
     url.searchParams.set('charset', 'utf-8')
     types.forEach(type => url.searchParams.append('c', type));
 
-    const response = await fetch(url, {mode: 'no-cors'});
-    if (!response.ok) {
+    if (stopRequestUntil > Date.now()) {
         const hitokoto = getHitokotoFromHistoryRand(types);
         if (hitokoto) {
-            console.warn('Hitokoto API request failed, using cached hitokoto');
             return hitokoto;
         }
-        console.error('Hitokoto API request failed, no cached hitokoto available');
-        throw new Error('Failed to fetch Hitokoto');
+        throw new Error('Hitokoto API request failed, no cached hitokoto available');
     }
+
+    const response = await fetch(url, {mode: 'no-cors'});
+    if (!response.ok) {
+        stopRequestUntil = Date.now() + requestInterval;
+        requestInterval *= 2;
+
+        const hitokoto = getHitokotoFromHistoryRand(types);
+        if (hitokoto) {
+            return hitokoto;
+        }
+        throw new Error('Failed to fetch Hitokoto, no cached hitokoto available');
+    }
+    requestInterval = initRequestInterval;
+
     const data = await response.json();
     const hitokoto = {
         content: data.hitokoto,

@@ -3,6 +3,7 @@ import {useConfigStore} from "@/stores/configStore.ts";
 import {storeToRefs} from "pinia";
 import {fetchWeatherNowWithCache} from "@/api/weather.ts";
 import {type Position, positionToString} from "@/utils/position.ts";
+import {iconMap} from "@/utils/weatherIconMap.ts";
 
 const configStore = useConfigStore()
 const {showWeather} = storeToRefs(configStore)
@@ -47,9 +48,6 @@ const updateWeather = async () => {
 watch(position, updateWeather, {immediate: true})
 
 
-const iconMap: Record<number, string> = {
-  101: 'rain'
-}
 </script>
 
 <template>
