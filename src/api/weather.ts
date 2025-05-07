@@ -101,7 +101,7 @@ const fetchWeatherHourly = async (location: string, hours: 24 | 72 | 168 = 24) =
 
 export const fetchWeatherHourlyWithCache = async (location: string, hours: 24 | 72 | 168 = 24) => {
     const cacheKey = `weather-hourly-${location}-${hours}`
-    return witchCache(() => fetchWeatherHourly(location, hours), cacheKey, 1000 * 60 * 30)
+    return witchCache(() => fetchWeatherHourly(location, hours), cacheKey, 1000 * 60 * 15)
 }
 
 const fetchWeatherMinutely = async (location: string, minutes: 5 = 5) => {
@@ -112,7 +112,7 @@ const fetchWeatherMinutely = async (location: string, minutes: 5 = 5) => {
 
 export const fetchWeatherMinutelyWithCache = async (location: string, minutes: 5 = 5) => {
     const cacheKey = `weather-minutely-${location}-${minutes}`
-    return witchCache(() => fetchWeatherMinutely(location, minutes), cacheKey, 1000 * 60 * 3)
+    return witchCache(() => fetchWeatherMinutely(location, minutes), cacheKey, 1000 * 60 * 5)
 }
 
 const fetchCityLookup = async (location: string) => {
@@ -124,4 +124,184 @@ const fetchCityLookup = async (location: string) => {
 export const fetchCityLookupWithCache = async (location: string) => {
     const cacheKey = `city-lookup-${location}`
     return witchCache(() => fetchCityLookup(location), cacheKey, 1000 * 3600 * 24)
+}
+
+const fetchGridWeatherNow = async (location: string) => {
+    const url = new URL(`${apiHost}/v7/grid-weather/now`)
+    url.searchParams.set('location', location)
+    return fetchWeatherAPI(url)
+}
+
+export const fetchGridWeatherNowWithCache = async (location: string) => {
+    const cacheKey = `grid-weather-now-${location}`
+    return witchCache(() => fetchGridWeatherNow(location), cacheKey, 1000 * 60 * 5)
+}
+
+const fetchGridWeatherDaily = async (location: string, days: 3 | 7) => {
+    const url = new URL(`${apiHost}/v7/grid-weather/${days}d`)
+    url.searchParams.set('location', location)
+    return fetchWeatherAPI(url)
+}
+
+export const fetchGridWeatherDailyWithCache = async (location: string, days: 3 | 7) => {
+    const cacheKey = `grid-weather-daily-${location}-${days}`
+    return witchCache(() => fetchGridWeatherDaily(location, days), cacheKey, 1000 * 60 * 30)
+}
+
+const fetchGridWeatherHourly = async (location: string, hours: 24 | 72) => {
+    const url = new URL(`${apiHost}/v7/grid-weather/${hours}h`)
+    url.searchParams.set('location', location)
+    return fetchWeatherAPI(url)
+}
+
+export const fetchGridWeatherHourlyWithCache = async (location: string, hours: 24 | 72) => {
+    const cacheKey = `grid-weather-hourly-${location}-${hours}`
+    return witchCache(() => fetchGridWeatherHourly(location, hours), cacheKey, 1000 * 60 * 30)
+}
+
+const fetchWarningNow = async (location: string) => {
+    const url = new URL(`${apiHost}/v7/warning/now`)
+    url.searchParams.set('location', location)
+    return fetchWeatherAPI(url)
+}
+
+export const fetchWarningNowWithCache = async (location: string) => {
+    const cacheKey = `warning-now-${location}`
+    return witchCache(() => fetchWarningNow(location), cacheKey, 1000 * 60 * 5)
+}
+
+const fetchHistoricalWeather = async (location: string, date: string) => {
+    const url = new URL(`${apiHost}/v7/historical/weather`)
+    url.searchParams.set('location', location)
+    url.searchParams.set('date', date)
+    return fetchWeatherAPI(url)
+}
+
+export const fetchHistoricalWeatherWithCache = async (location: string, date: string) => {
+    const cacheKey = `historical-weather-${location}-${date}`
+    return witchCache(() => fetchHistoricalWeather(location, date), cacheKey, 1000 * 60 * 60)
+}
+
+const fetchIndicesDaily = async (location: string, days: 1 | 3 = 1) => {
+    const url = new URL(`${apiHost}/v7/indices/${days}d`)
+    url.searchParams.set('location', location)
+    return fetchWeatherAPI(url)
+}
+
+export const fetchIndicesDailyWithCache = async (location: string, days: 1 | 3 = 1) => {
+    const cacheKey = `indices-daily-${location}-${days}`
+    return witchCache(() => fetchIndicesDaily(location, days), cacheKey, 1000 * 60 * 30)
+}
+
+const fetchAirNow = async (latitude: number, longitude: number) => {
+    const url = new URL(`${apiHost}/airquality/v1/current/${latitude}/${longitude}`)
+    return fetchWeatherAPI(url)
+}
+
+export const fetchAirNowWithCache = async (latitude: number, longitude: number) => {
+    const cacheKey = `air-now-${latitude}-${longitude}`
+    return witchCache(() => fetchAirNow(latitude, longitude), cacheKey, 1000 * 60 * 15)
+}
+
+const fetchAirDaily = async (latitude: number, longitude: number) => {
+    const url = new URL(`${apiHost}/airquality/v1/daily/${latitude}/${longitude}`)
+    return fetchWeatherAPI(url)
+}
+
+export const fetchAirDailyWithCache = async (latitude: number, longitude: number) => {
+    const cacheKey = `air-daily-${latitude}-${longitude}`
+    return witchCache(() => fetchAirDaily(latitude, longitude), cacheKey, 1000 * 60 * 30)
+}
+
+const fetchAirHourly = async (latitude: number, longitude: number) => {
+    const url = new URL(`${apiHost}/airquality/v1/hourly/${latitude}/${longitude}`)
+    return fetchWeatherAPI(url)
+}
+
+export const fetchAirHourlyWithCache = async (latitude: number, longitude: number) => {
+    const cacheKey = `air-hourly-${latitude}-${longitude}`
+    return witchCache(() => fetchAirHourly(latitude, longitude), cacheKey, 1000 * 60 * 30)
+}
+
+const fetchStormList = async (year: number = new Date().getFullYear(), basin: 'AL' | 'EP' | 'NP' | 'SP' | 'NI' | 'SI' = 'NP') => {
+    const url = new URL(`${apiHost}/v7/tropical/storm-list`)
+    url.searchParams.set('basin', basin)
+    return fetchWeatherAPI(url)
+}
+
+export const fetchStormListWithCache = async (year: number = new Date().getFullYear(), basin: 'AL' | 'EP' | 'NP' | 'SP' | 'NI' | 'SI' = 'NP') => {
+    const cacheKey = `storm-list-${year}-${basin}`
+    return witchCache(() => fetchStormList(year, basin), cacheKey, 1000 * 60 * 15)
+}
+
+const fetchStormTrack = async (stormId: string) => {
+    const url = new URL(`${apiHost}/v7/tropical/storm-track`)
+    url.searchParams.set('stormId', stormId)
+    return fetchWeatherAPI(url)
+}
+
+export const fetchStormTrackWithCache = async (stormId: string) => {
+    const cacheKey = `storm-track-${stormId}`
+    return witchCache(() => fetchStormTrack(stormId), cacheKey, 1000 * 60 * 15)
+}
+
+const fetchStormForecast = async (stormId: string) => {
+    const url = new URL(`${apiHost}/v7/tropical/storm-forecast`)
+    url.searchParams.set('stormId', stormId)
+    return fetchWeatherAPI(url)
+}
+
+export const fetchStormForecastWithCache = async (stormId: string) => {
+    const cacheKey = `storm-forecast-${stormId}`
+    return witchCache(() => fetchStormForecast(stormId), cacheKey, 1000 * 60 * 15)
+}
+
+const fetchSolar = async (location: string, hours: 24 | 72 = 24) => {
+    const url = new URL(`${apiHost}/v7/solar-radiation/${hours}h`)
+    url.searchParams.set('location', location)
+    return fetchWeatherAPI(url)
+}
+
+export const fetchSolarWithCache = async (location: string, hours: 24 | 72 = 24) => {
+    const cacheKey = `solar-${location}-${hours}`
+    return witchCache(() => fetchSolar(location, hours), cacheKey, 1000 * 60 * 60)
+}
+
+const fetchAstronomySun = async (location: string, date: string) => {
+    const url = new URL(`${apiHost}/v7/astronomy/sun`)
+    url.searchParams.set('location', location)
+    url.searchParams.set('date', date)
+    return fetchWeatherAPI(url)
+}
+
+export const fetchAstronomySunWithCache = async (location: string, date: string) => {
+    const cacheKey = `astronomy-sun-${location}-${date}`
+    return witchCache(() => fetchAstronomySun(location, date), cacheKey, 1000 * 60 * 60)
+}
+
+const fetchAstronomyMoon = async (location: string, date: string) => {
+    const url = new URL(`${apiHost}/v7/astronomy/moon`)
+    url.searchParams.set('location', location)
+    url.searchParams.set('date', date)
+    return fetchWeatherAPI(url)
+}
+
+export const fetchAstronomyMoonWithCache = async (location: string, date: string) => {
+    const cacheKey = `astronomy-moon-${location}-${date}`
+    return witchCache(() => fetchAstronomyMoon(location, date), cacheKey, 1000 * 60 * 60)
+}
+
+const fetchAstronomySolarAngle = async (location: string, date: string, time: string, tz: string, alt: number) => {
+    const url = new URL(`${apiHost}/v7/astronomy/solar-elevation-angle`)
+    url.searchParams.set('location', location)
+    url.searchParams.set('date', date)
+    url.searchParams.set('time', time)
+    url.searchParams.set('tz', tz)
+    url.searchParams.set('alt', alt.toString())
+    return fetchWeatherAPI(url)
+}
+
+export const fetchAstronomySolarAngleWithCache = async (location: string, date: string, time: string, tz: string, alt: number) => {
+    const cacheKey = `astronomy-solar-angle-${location}-${date}-${time}-${tz}-${alt}`
+    return witchCache(() => fetchAstronomySolarAngle(location, date, time, tz, alt), cacheKey, 1000 * 60 * 60)
 }
