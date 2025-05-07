@@ -55,14 +55,63 @@ watch(position, updateWeather, {immediate: true})
       placement="right-start"
       trigger="hover">
     <template #reference>
-      <SvgIcon :name="getWeatherIcon(Number(weatherIcon))" color="#fff" prefix="icon-weather"/>
-      {{ weatherText }}
-      {{ temperature }}
+      <div class="weather-wrap">
+        <div class="weather-icon">
+          <SvgIcon :name="getWeatherIcon(Number(weatherIcon))" prefix="icon-weather"/>
+        </div>
+        <div class="weather-info">
+          <div class="temperature">{{ temperature }}<span class="degree">℃</span></div>
+          <div class="weather-text">{{ weatherText }}</div>
+        </div>
+      </div>
     </template>
-    <weather-details/>
+    <weather-details :position="position"/>
   </el-popover>
 </template>
 
 <style scoped>
+.weather-wrap {
+  display: flex;
+  align-items: center;
+  font-size: var(--el-font-size-base);
+  line-height: 1;
+}
 
+.weather-icon {
+  width: 5em;
+  height: 5em;
+  margin-right: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.weather-icon :deep(svg), .weather-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.weather-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: var(--el-text-color-primary);
+}
+
+.temperature {
+  font-size: 1.5em;
+  font-weight: bold;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.degree {
+  font-size: 0.75em;
+  vertical-align: super;
+  margin-left: 2px;
+}
+
+.weather-text {
+  margin-top: 4px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), 0 4px 16px rgba(0, 0, 0, 0.15);
+}
 </style>

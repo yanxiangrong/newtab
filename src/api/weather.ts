@@ -44,9 +44,16 @@ const witchCache = async (fetchFunc: () => Promise<any>, cacheKey: string, ttl: 
     if (cachedData) {
         return cachedData
     }
-    const data = await fetchFunc()
-    cache.set(cacheKey, data, {ttl})
-    return data
+    return await navigator.locks.request(cacheKey, async () => {
+        // 二次检查，避免队列等待期间被其他人设置过
+        const cachedInsideLock = cache.get(cacheKey)
+        if (cachedInsideLock) return cachedInsideLock
+
+        const data = await fetchFunc()
+        cache.set(cacheKey, data, {ttl})
+        return data
+    })
+
 }
 
 const getWeatherJWTWithCache = async () => {

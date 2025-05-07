@@ -62,10 +62,11 @@ onBeforeUnmount(() => {
   text-align: center;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 0 4px 16px rgba(0, 0, 0, 0.3);
   position: relative;
+  font-size: var(--el-font-size-base);
 }
 
 .hitokoto-content {
-  font-size: 1.15rem;
+  font-size: 1.15em;
   word-break: break-word;
   color: var(--el-text-color-regular);
 }
@@ -84,7 +85,7 @@ onBeforeUnmount(() => {
 }
 
 .hitokoto-from {
-  font-size: 0.98rem;
+  font-size: 0.98em;
   margin-top: 6px;
   text-align: end;
   color: var(--el-text-color-regular);

@@ -28,10 +28,11 @@ const dateFormated = useDateFormat(now, 'M月d日 dddd', {locales: 'zh-CN'})
   color: var(--el-text-color-primary);
   font-weight: 300;
   font-family: 'Arial', 'Helvetica Neue', Helvetica, sans-serif;
-  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 8px 32px rgba(0, 0, 0, 0.15);;
+  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.15), 0 8px 32px rgba(0, 0, 0, 0.15);
 }
 
 .date {
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 0 4px 16px rgba(0, 0, 0, 0.3);
+  font-size: var(--el-font-size-base);
 }
 </style>
