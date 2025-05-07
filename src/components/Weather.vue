@@ -2,7 +2,7 @@
 import DrizzleIcon from '@/assets/weather-icons/drizzle.svg'
 import {useConfigStore} from "@/stores/configStore.ts";
 import {storeToRefs} from "pinia";
-import {fetchWeatherNow} from "@/api/weather.ts";
+import {fetchWeatherNowWithCache} from "@/api/weather.ts";
 import {type Position, positionToString} from "@/utils/position.ts";
 
 const configStore = useConfigStore()
@@ -39,7 +39,7 @@ const updateWeather = async () => {
   if (!showWeather.value || !position.value) {
     return
   }
-  const data = await fetchWeatherNow(positionToString(position.value))
+  const data = await fetchWeatherNowWithCache(positionToString(position.value))
   weatherText.value = data.now.text
   temperature.value = data.now.temp
   weatherIcon.value = data.now.icon

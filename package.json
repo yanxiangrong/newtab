@@ -13,8 +13,11 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
+    "@noble/ed25519": "^2.2.3",
     "@vueuse/core": "^13.1.0",
     "element-plus": "^2.9.7",
+    "js-base64": "^3.7.7",
+    "lru-cache": "^11.1.0",
     "pinia": "^3.0.1",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"
@@ -25,7 +28,6 @@
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/tsconfig": "^0.7.0",
     "chrome-types": "^0.1.345",
-    "jose": "^6.0.11",
     "npm-run-all2": "^7.0.2",
     "typescript": "~5.8.0",
     "unplugin-auto-import": "^19.1.2",
