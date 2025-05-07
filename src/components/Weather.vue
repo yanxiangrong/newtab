@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import DrizzleIcon from '@/assets/weather-icons/drizzle.svg'
 import {useConfigStore} from "@/stores/configStore.ts";
 import {storeToRefs} from "pinia";
 import {fetchWeatherNowWithCache} from "@/api/weather.ts";
@@ -47,11 +46,14 @@ const updateWeather = async () => {
 
 watch(position, updateWeather, {immediate: true})
 
+
+const iconMap: Record<number, string> = {
+  101: 'rain'
+}
 </script>
 
 <template>
-  天气
-  <DrizzleIcon/>
+  <SvgIcon :name="iconMap[101]" color="#fff" prefix="icon-weather"/>
   {{ weatherText }}
   {{ temperature }}
   {{ weatherIcon }}

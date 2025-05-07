@@ -47,6 +47,7 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     SearchBar: typeof import('./components/SearchBar.vue')['default']
     SettingPanel: typeof import('./components/SettingPanel.vue')['default']
+    SvgIcon: typeof import('./components/SvgIcon.vue')['default']
     TheWelcome: typeof import('./components/TheWelcome.vue')['default']
     TimeNow: typeof import('./components/TimeNow.vue')['default']
     Weather: typeof import('./components/Weather.vue')['default']

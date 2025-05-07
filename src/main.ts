@@ -9,6 +9,7 @@ import App from './App.vue'
 import router from './router'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import {piniaPersist} from "@/plugins/piniaPersist.ts";
+import 'virtual:svg-icons-register'
 
 const pinia = createPinia()
 pinia.use(piniaPersist)

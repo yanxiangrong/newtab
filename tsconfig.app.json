@@ -1,18 +1,27 @@
 {
   "extends": "@vue/tsconfig/tsconfig.dom.json",
   "include": [
-    "./env.d.ts", "src/**/*", "src/**/*.vue"],
-  "exclude": ["src/**/__tests__/*"],
+    "./env.d.ts",
+    "src/**/*",
+    "src/**/*.vue"
+  ],
+  "exclude": [
+    "src/**/__tests__/*"
+  ],
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-    "types": ["chrome-types"],
-    "typeRoots": [
-        "./node_modules/@types",
-        "./node_modules/chrome-types"
+    "types": [
+      "chrome-types",
+      "vite-plugin-svg-icons/client"
     ],
-
+    "typeRoots": [
+      "./node_modules/@types",
+      "./node_modules/chrome-types"
+    ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": [
+        "./src/*"
+      ]
     }
   }
 }
