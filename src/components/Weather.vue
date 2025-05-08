@@ -6,7 +6,7 @@ import {type Position, positionToString} from "@/utils/position.ts";
 import {getLocation} from "@/api/baiduLocation.ts";
 
 const configStore = useConfigStore()
-const {showWeather, useBrowserLocation} = storeToRefs(configStore)
+const {showWeather, locationSetting} = storeToRefs(configStore)
 
 const position = ref<Position | null>(null)
 
@@ -18,19 +18,17 @@ const updatePosition = async () => {
   if (!showWeather.value) {
     return
   }
-  if (navigator.geolocation && useBrowserLocation.value) {
+  if (navigator.geolocation && locationSetting.value == 'browser') {
     navigator.geolocation.getCurrentPosition((p) => {
-      if (useBrowserLocation.value) {
-        position.value = {
-          lat: p.coords.latitude,
-          lng: p.coords.longitude
-        }
-        console.log('Current position (browser):', positionToString(position.value))
+      position.value = {
+        lat: p.coords.latitude,
+        lng: p.coords.longitude
       }
+      console.log('Current position (browser):', positionToString(position.value))
     }, (error) => {
       console.error('Error getting location:', error)
     })
-  } else {
+  } else if (locationSetting.value == 'ip') {
     try {
       const p = await getLocation()
       position.value = {
@@ -44,7 +42,7 @@ const updatePosition = async () => {
   }
 }
 
-watch([showWeather, useBrowserLocation], updatePosition, {immediate: true})
+watch([showWeather, locationSetting], updatePosition, {immediate: true})
 
 
 const updateWeather = async () => {

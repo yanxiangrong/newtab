@@ -24,7 +24,7 @@ export const useConfigStore = defineStore('config', {
         showHitokoto: true,
         hitokotoClass: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l'],
         showWeather: true,
-        useBrowserLocation: true,
+        locationSetting: 'none' as 'ip' | 'browser' | 'none',
     })
 })
 

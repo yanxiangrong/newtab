@@ -144,7 +144,8 @@ const onFontFamilyChange = (value: string) => {
       <el-switch v-model="config.showWeather.value"/>
     </el-form-item>
     <el-form-item label="位置服务">
-      <el-switch v-model="config.useBrowserLocation.value" active-text="浏览器定位" inactive-text="IP 定位"
+      <el-switch v-model="config.locationSetting.value" active-text="浏览器定位" active-value="browser"
+                 inactive-text="IP 定位" inactive-value="ip"
                  style="--el-switch-on-color: #409EFF; --el-switch-off-color: #FFA940"/>
     </el-form-item>
   </el-form>
