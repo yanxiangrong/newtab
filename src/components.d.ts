@@ -54,7 +54,7 @@ declare module 'vue' {
     TimeNow: typeof import('./components/TimeNow.vue')['default']
     Weather: typeof import('./components/Weather.vue')['default']
     WeatherDetails: typeof import('./components/WeatherDetails.vue')['default']
-      WeatherIcon: typeof import('./components/WeatherIcon.vue')['default']
+    WeatherIcon: typeof import('./components/WeatherIcon.vue')['default']
     WelcomeItem: typeof import('./components/WelcomeItem.vue')['default']
   }
 }

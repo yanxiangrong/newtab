@@ -151,7 +151,7 @@ watch(backgroundImageUrl, refreshBackgroundImage, {immediate: true})
   position: relative;
   height: 100vh;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: var(--el-mask-color-extra-light);
 }
 
 .search-container {
