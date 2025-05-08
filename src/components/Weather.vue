@@ -3,7 +3,7 @@ import {useConfigStore} from "@/stores/configStore.ts";
 import {storeToRefs} from "pinia";
 import {fetchWeatherNowWithCache} from "@/api/weather.ts";
 import {type Position, positionToString} from "@/utils/position.ts";
-import {getWeatherIcon} from "@/utils/weatherIconMap.ts";
+import {getWeatherIconComponent} from "@/icons/weather-icons/index.ts";
 import {getLocation} from "@/api/baiduLocation.ts";
 
 const configStore = useConfigStore()
@@ -43,9 +43,7 @@ const updatePosition = async () => {
   }
 }
 
-onMounted(() => {
-  watch([showWeather, useBrowserLocation], updatePosition, {immediate: true})
-})
+watch([showWeather, useBrowserLocation], updatePosition, {immediate: true})
 
 
 const updateWeather = async () => {
@@ -70,7 +68,7 @@ watch(position, updateWeather, {immediate: true})
     <template #reference>
       <div class="weather-wrap">
         <div class="weather-icon">
-          <SvgIcon :name="getWeatherIcon(Number(weatherIcon))" prefix="icon-weather"/>
+          <component :is="getWeatherIconComponent(Number(weatherIcon))"/>
         </div>
         <div class="weather-info">
           <div class="temperature">{{ temperature }}<span v-if="temperature" class="degree">℃</span></div>
