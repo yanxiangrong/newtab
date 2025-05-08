@@ -70,9 +70,9 @@ watch(backgroundImageUrl, refreshBackgroundImage, {immediate: true})
   <div class="background">
     <div v-if="showBackgroundImage" class="background-img-container"
          :class="{blurred: isBlurred}">
-      <img class="background-img" :class="{show: backgroundImg1Show}"
+      <img :class="{show: backgroundImg1Show}" class="background-img" draggable="false"
            :src="backgroundImage1Url" @load="onBackgroundImg1Loaded" alt=""/>
-      <img class="background-img" :class="{show: backgroundImg2Show}"
+      <img :class="{show: backgroundImg2Show}" class="background-img" draggable="false"
            :src="backgroundImage2Url" @load="onBackgroundImg2Loaded" alt=""/>
     </div>
     <el-container class="container">

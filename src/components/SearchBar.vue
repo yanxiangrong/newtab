@@ -179,7 +179,7 @@ const handleSuggestionSelect = (item: Record<string, any>) => {
     <template #default="{item}">
       <div class="suggestion-wrapper">
         <el-icon>
-          <img v-if="item.link" loading="lazy" :src="faviconURL(item.link)" alt=""/>
+          <img v-if="item.link" :src="faviconURL(item.link)" alt="" draggable="false" loading="lazy"/>
           <template v-else>
             <Link v-if="item.type === 'history'"/>
             <Star v-else-if="item.type === 'bookmark'"/>

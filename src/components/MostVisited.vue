@@ -55,7 +55,7 @@ if (isChromeTopSitesAvailable()) {
     <div class="site-item-wrap" v-for="site in mostVisited" :key="site.url">
       <el-link :href="site.url" target="_blank" :underline="false">
         <div class="site-item">
-          <img :src="faviconURL(site.url, 48)" alt="" class="favicon"/>
+          <img :src="faviconURL(site.url, 48)" alt="" class="favicon" draggable="false"/>
           <span>{{ site.title }}</span>
         </div>
       </el-link>

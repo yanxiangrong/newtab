@@ -21,7 +21,7 @@ defineProps<{
   <el-menu-item v-else>
     <el-link :underline="false" :href="node.url">
       <el-icon class="favicon" v-if="node.url">
-        <img loading="lazy" :src="faviconURL(node.url)" alt=""/>
+        <img :src="faviconURL(node.url)" alt="" draggable="false" loading="lazy"/>
       </el-icon>
       <span class="bookmark-span">{{ node.title }}</span>
     </el-link>
