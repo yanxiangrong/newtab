@@ -21,11 +21,13 @@ const updatePosition = async () => {
   }
   if (navigator.geolocation && useBrowserLocation.value) {
     navigator.geolocation.getCurrentPosition((p) => {
-      position.value = {
-        lat: p.coords.latitude,
-        lng: p.coords.longitude
+      if (useBrowserLocation.value) {
+        position.value = {
+          lat: p.coords.latitude,
+          lng: p.coords.longitude
+        }
+        console.log('Current position (browser):', positionToString(position.value))
       }
-      console.log('Current position (browser):', positionToString(position.value))
     }, (error) => {
       console.error('Error getting location:', error)
     })
