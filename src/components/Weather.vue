@@ -3,7 +3,6 @@ import {useConfigStore} from "@/stores/configStore.ts";
 import {storeToRefs} from "pinia";
 import {fetchWeatherNowWithCache} from "@/api/weather.ts";
 import {type Position, positionToString} from "@/utils/position.ts";
-import {getWeatherIconComponent} from "@/icons/weather-icons/index.ts";
 import {getLocation} from "@/api/baiduLocation.ts";
 
 const configStore = useConfigStore()
@@ -13,7 +12,7 @@ const position = ref<Position | null>(null)
 
 const weatherText = ref('')
 const temperature = ref('')
-const weatherIcon = ref('')
+const weatherIconCode = ref(0)
 
 const updatePosition = async () => {
   if (!showWeather.value) {
@@ -55,7 +54,7 @@ const updateWeather = async () => {
   const data = await fetchWeatherNowWithCache(positionToString(position.value))
   weatherText.value = data.now.text
   temperature.value = data.now.temp
-  weatherIcon.value = data.now.icon
+  weatherIconCode.value = Number(data.now.icon)
 }
 
 watch(position, updateWeather, {immediate: true})
@@ -70,7 +69,7 @@ watch(position, updateWeather, {immediate: true})
     <template #reference>
       <div class="weather-wrap">
         <div class="weather-icon">
-          <component :is="getWeatherIconComponent(Number(weatherIcon))"/>
+          <weather-icon :code="weatherIconCode"/>
         </div>
         <div class="weather-info">
           <div class="temperature">{{ temperature }}<span v-if="temperature" class="degree">℃</span></div>
@@ -97,11 +96,6 @@ watch(position, updateWeather, {immediate: true})
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.weather-icon :deep(svg), .weather-icon svg {
-  width: 100%;
-  height: 100%;
 }
 
 .weather-info {
